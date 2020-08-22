@@ -8,6 +8,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app.component";
 
@@ -20,6 +21,7 @@ import { AppComponent } from "./app.component";
     MatInputModule,
     MatIconModule,
     MatTooltipModule,
+    MatDialogModule,
     MatSelectModule
   ],
   declarations: [AppComponent],

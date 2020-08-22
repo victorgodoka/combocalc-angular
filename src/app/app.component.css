@@ -60,3 +60,13 @@ mat-form-field ~ mat-form-field {
     width: 100%;
     min-height: 36px;
 }
+
+.line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.line label ~ button {
+    margin-left: 10px;
+}

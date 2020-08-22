@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject } from "@angular/core";
+
 import {
   FormControl,
   FormBuilder,
@@ -20,7 +21,8 @@ export class AppComponent {
   constructor(private readonly fb: FormBuilder) { }
 
   public file: any;
-  public cardNames: string[] = [];
+  public cardNames: string[];
+  public omega: string;
 
   public dynamicForm = this.fb.group({
     searchers: this.fb.array([]),
@@ -103,14 +105,31 @@ export class AppComponent {
     this.file = e.target.files[0];
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
-      var idDeck = (fileReader.result as string).split("#extra")[0];
-      var uniqueIds = [...new Set(idDeck.split("\n").filter(c => c.length > 0 && !c.startsWith("#") && !c.startsWith("!")))]
-      fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${uniqueIds.join(",")}`)
-        .then((res) => res.json())
-        .then(({ data }) => {
-          this.cardNames = data.map(c => c.name)
-        })
+      var idDeck = (fileReader.result as string).split("#extra")[0].split("\n").filter(c => c.length > 0 && !c.startsWith("#") && !c.startsWith("!"));
+      this.readDeck(idDeck);
     }
     fileReader.readAsText(this.file);
   }
+
+  public readDeck(deck) {
+    this.dynamicForm.controls['deckSize'].setValue(deck.length)
+    var uniqueIds = [...new Set(deck)]
+    fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${uniqueIds.join(",")}`)
+      .then((res) => res.json())
+      .then(({ data }) => {
+        this.cardNames = data.map(c => c.name)
+      })
+  }
+
+  public openDialog() {
+    this.omega = prompt("Insert Omega Code here.")
+    if (this.omega) {
+      fetch(`https://cors-anywhere.herokuapp.com/http://51.222.12.115:7000/convert?to=json&list=${encodeURIComponent(this.omega)}`)
+        .then((res) => res.json())
+        .then(({ data }) => {
+          this.readDeck(JSON.parse(data.formats.json).main)
+        })
+    }
+  }
 }
+

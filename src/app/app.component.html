@@ -1,25 +1,38 @@
 <main class="form">
-  <p class="disclaimer" *ngIf="!file">Import a .ydk file to continue</p>
-  <input type="file" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide">
-  <label for="uploadydk" class="form-label mat-raised-button mat-primary">
-    <mat-icon>cloud_upload</mat-icon> Import .ydk
-  </label>
+  <p class="disclaimer" *ngIf="!cardNames">Import a .ydk or input an Omega Deck code to continue</p>
+  <div class="line">
+    <input type="file" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide">
+    <label for="uploadydk" class="form-label mat-raised-button mat-primary">
+      <mat-icon>cloud_upload</mat-icon> Import .ydk
+    </label>
+    <button (click)="openDialog()" mat-raised-button mat-primary>
+      <mat-icon>code</mat-icon> Import Omega code
+    </button>
+  </div>
 
-  <form *ngIf="file" [formGroup]="dynamicForm">
+  <form *ngIf="cardNames" [formGroup]="dynamicForm">
     <div>
       <h1>
-        Probablity {{ probablity | async | percent:'1.2-2' }}
+        <div class="line">
+          <input type="file" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide">
+          <label for="uploadydk" class="form-label mat-raised-button mat-primary">
+            <mat-icon>cloud_upload</mat-icon> Import .ydk
+          </label>
+          <button (click)="openDialog()" mat-raised-button mat-primary>
+            <mat-icon>code</mat-icon> Import Omega code
+          </button>
+        </div> Probablity {{ probablity | async | percent:'1.2-2' }}
       </h1>
     </div>
     <div class="form-group">
       <mat-form-field>
         <mat-label>Deck Size</mat-label>
-        <input type="number" matInput formControlName="deckSize">
+        <input type="number" readonly matInput formControlName="deckSize">
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Hand Size</mat-label>
-        <input type="number" matInput formControlName="handSize">
+        <input type="number" min="5" max="6" matInput formControlName="handSize">
       </mat-form-field>
     </div>
 
