@@ -1,27 +1,15 @@
-# CalculatorProj
+# Card Calculator Project
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.6.
+Projeto feito usando Angular. Seu objetivo é calcular proababilidades de se ter uma mão pre-definida pelo jogador de Yugioh.
 
-## Development server
+# Como rodar // How to run
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+[PT] Após clonar o projeto, instale as dependências com `npm install` e em seguida rode o projeto com `ng serve`.
 
-## Code scaffolding
+[EN] After cloning the repo, install dependencies with `npm install`, then to run the project use `ng serve`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Autores // Authors
 
-## Build
+[PT] O Código de proababilidade é de criação de AntiMetaman. A estrutura do projeto foi iniciada por wSedleck e finalizada por mim, Victor Godoka.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+[EN] Probability Code is cration of Antimetaman. Project structure was initiated by wSedleck and finished by me, Victor Godoka.
