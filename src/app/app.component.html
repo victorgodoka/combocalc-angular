@@ -12,17 +12,7 @@
 
   <form *ngIf="cardNames" [formGroup]="dynamicForm">
     <div>
-      <h1>
-        <div class="line">
-          <input type="file" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide">
-          <label for="uploadydk" class="form-label mat-raised-button mat-primary">
-            <mat-icon>cloud_upload</mat-icon> Import .ydk
-          </label>
-          <button (click)="openDialog()" mat-raised-button mat-primary>
-            <mat-icon>code</mat-icon> Import Omega code
-          </button>
-        </div> Probablity {{ probablity | async | percent:'1.2-2' }}
-      </h1>
+      <h1> Probablity {{ probablity | async | percent:'1.2-2' }} </h1>
     </div>
     <div class="form-group">
       <mat-form-field>
@@ -32,10 +22,41 @@
 
       <mat-form-field>
         <mat-label>Hand Size</mat-label>
-        <input type="number" min="5" max="6" matInput formControlName="handSize">
+        <input type="number" value="5" min="5" max="6" matInput formControlName="handSize">
+      </mat-form-field>
+    </div>
+    <h2>Cards</h2>
+    <div class="form-group" *ngFor="let group of cardGroups; let i = index" [formGroup]="group">
+      <mat-form-field>
+        <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
+        <mat-select disableOptionCentering formControlName="names" multiple>
+          <mat-option *ngFor="let cardName of cardNames" [value]="cardName">{{cardName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Copies</mat-label>
+        <input type="number" matInput formControlName="copies">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Min Desired</mat-label>
+        <input type="number" matInput formControlName="minDesired">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Max Desired</mat-label>
+        <input type="number" matInput formControlName="maxDesired">
       </mat-form-field>
     </div>
 
+    <button mat-icon-button (click)="addCard()">
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <button mat-icon-button (click)="removeCard()">
+      <mat-icon>remove</mat-icon>
+    </button>
     <h2>Searchers <button mat-icon-button
         matTooltip="Cards that search others and usually help to achieve the combo pieces (but are not in the combo themselves, like E - Emergency Call for HEROes ).">
         <mat-icon>help</mat-icon>
@@ -70,38 +91,6 @@
       <mat-icon>remove</mat-icon>
     </button>
 
-    <h2>Cards</h2>
-    <div class="form-group" *ngFor="let group of cardGroups; let i = index" [formGroup]="group">
-      <mat-form-field>
-        <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
-        <mat-select disableOptionCentering formControlName="names" multiple>
-          <mat-option *ngFor="let cardName of cardNames" [value]="cardName">{{cardName}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Copies</mat-label>
-        <input type="number" matInput formControlName="copies">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Min Desired</mat-label>
-        <input type="number" matInput formControlName="minDesired">
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Max Desired</mat-label>
-        <input type="number" matInput formControlName="maxDesired">
-      </mat-form-field>
-    </div>
-
-    <button mat-icon-button (click)="addCard()">
-      <mat-icon>add</mat-icon>
-    </button>
-
-    <button mat-icon-button (click)="removeCard()">
-      <mat-icon>remove</mat-icon>
-    </button>
   </form>
 
 </main>

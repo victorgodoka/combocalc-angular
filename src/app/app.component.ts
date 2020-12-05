@@ -28,13 +28,12 @@ export class AppComponent {
     searchers: this.fb.array([]),
     cards: this.fb.array([]),
     deckSize: [0],
-    handSize: [0]
+    handSize: [5]
   });
 
   public probablity = this.dynamicForm.valueChanges.pipe(
     startWith(0),
     map(({ searchers, cards, handSize, deckSize }) => {
-      console.log(searchers);
       try {
         return comboCalc(searchers, cards, handSize, deckSize)
       } catch {
@@ -101,7 +100,6 @@ export class AppComponent {
   }
 
   public uploadDeck(e) {
-    console.log(e.target.files)
     this.file = e.target.files[0];
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
