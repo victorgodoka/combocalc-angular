@@ -1,0 +1,34 @@
+<ng-container *ngIf="deckData$ | async; let deckData">
+  <main class="form" *ngIf="deckData.length; else import">
+    <p>{{ shareLink | async }}</p>
+    <form [formGroup]="dynamicForm">
+      <button mat-button (click)="addCombo()">Add Combo</button>
+      <app-combo
+        *ngFor="let form of dynamicForm.controls; let i = index"
+        [deckData]="deckData"
+        [form]="form"
+      ></app-combo>
+    </form>
+  </main>
+</ng-container>
+
+<ng-template #import>
+  <p class="disclaimer">
+    Import a .ydk or input an Omega Deck code to continue
+  </p>
+  <div class="line">
+    <input
+      type="file"
+      name="uploadydk"
+      id="uploadydk"
+      (change)="uploadDeck($event)"
+      class="hide"
+    />
+    <label for="uploadydk" class="form-label mat-raised-button mat-primary">
+      <mat-icon>cloud_upload</mat-icon> Import .ydk
+    </label>
+    <button (click)="openDialog()" mat-raised-button mat-primary>
+      <mat-icon>code</mat-icon> Import Omega code
+    </button>
+  </div>
+</ng-template>

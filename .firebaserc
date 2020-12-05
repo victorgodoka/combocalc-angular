@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "ydkdecklist"
+  },
+  "targets": {
+    "ydkdecklist": {
+      "hosting": {
+        "calculator-proj": [
+          "ydkdecklist"
+        ]
+      }
+    }
   }
 }

@@ -11,8 +11,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule  } from '@angular/material/table';
 import { MatSlideToggleModule  } from '@angular/material/slide-toggle';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 import { AppComponent } from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import { ProbabilityComponent } from './probability/probability.component';
+import { ComboComponent } from './probability/combo/combo.component';
 
 @NgModule({
   imports: [
@@ -20,6 +25,16 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp({
+      apiKey: 'AIzaSyDKPUzQgUU6iTsPQ3N7HpWBEQuo7dImy6k',
+      authDomain: 'ydkdecklist.firebaseapp.com',
+      databaseURL: 'https://ydkdecklist.firebaseio.com',
+      projectId: 'ydkdecklist',
+      storageBucket: 'ydkdecklist.appspot.com',
+      messagingSenderId: '702627875927',
+      appId: '1:702627875927:web:b2997a2b1e814020d8e712',
+    }),
+    AngularFirestoreModule,
     MatButtonModule,
     MatInputModule,
     MatIconModule,
@@ -27,9 +42,10 @@ import { AppComponent } from './app.component';
     MatDialogModule,
     MatTableModule,
     MatSelectModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    AppRoutingModule,
   ],
-  declarations: [AppComponent],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, ProbabilityComponent, ComboComponent],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

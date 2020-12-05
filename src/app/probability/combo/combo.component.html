@@ -1,0 +1,127 @@
+<form [formGroup]="form">
+  <div>
+    <h1>Probability {{ probability | async | percent: "1.2-2" }}</h1>
+  </div>
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Deck Size</mat-label>
+      <input type="number" readonly matInput [value]="deckData?.length" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Hand Size</mat-label>
+      <input
+        type="number"
+        value="5"
+        min="5"
+        max="6"
+        matInput
+        formControlName="handSize"
+      />
+    </mat-form-field>
+  </div>
+  <h2>Cards</h2>
+  <div
+    class="form-group"
+    *ngFor="let group of cardGroups; let i = index"
+    [formGroup]="group"
+  >
+    <mat-form-field>
+      <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
+      <mat-select disableOptionCentering formControlName="names" multiple>
+        <mat-option
+          *ngFor="let card of cardsWithFormInfo | async; let index = index"
+          [value]="card.name + index"
+          [disabled]="
+            card.groupID && card.groupID !== group.controls.id.value
+          "
+        >
+          <span class="text-option">{{ card.name }}</span>
+          <img
+            class="image-option"
+            src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
+              card.id
+            }}.jpg"
+          />
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Min Desired</mat-label>
+      <input type="number" matInput formControlName="minDesired" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Max Desired</mat-label>
+      <input type="number" matInput formControlName="maxDesired" />
+    </mat-form-field>
+  </div>
+
+  <button type="button" mat-icon-button (click)="addCard()">
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <button type="button" mat-icon-button (click)="removeCard()">
+    <mat-icon>remove</mat-icon>
+  </button>
+  <h2 class="title">
+    <span>Searchers</span>
+    <button
+      type="button"
+      mat-icon-button
+      matTooltip="Cards that search others and usually help to achieve the combo pieces (but are not in the combo themselves, like E - Emergency Call for HEROes )."
+    >
+      <mat-icon>help</mat-icon>
+    </button>
+  </h2>
+  <div
+    class="form-group"
+    *ngFor="let group of searcherGroups; let i = index"
+    [formGroup]="group"
+  >
+    <mat-form-field>
+      <mat-label>{{ "Search Group " + (i + 1) }}</mat-label>
+      <mat-select disableOptionCentering formControlName="names" multiple>
+        <mat-option
+          *ngFor="let card of cardsWithFormInfo | async; let index = index"
+          [value]="card.name + index"
+          [disabled]="
+            card.searchGroupID &&
+            card.searchGroupID !== group.controls.id.value
+          "
+        >
+          <span class="text-option">{{ card.name }}</span>
+          <img
+            class="image-option"
+            src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
+              card.id
+            }}.jpg"
+        /></mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Targets</mat-label>
+      <mat-select
+        disableOptionCentering
+        formControlName="associations"
+        multiple
+      >
+        <mat-option
+          *ngFor="let cardName of cardGroups; let value = index"
+          [value]="value"
+          >{{ cardName.value.names }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <button type="button" mat-icon-button (click)="addSearcher()">
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <button type="button" mat-icon-button (click)="removeSearcher()">
+    <mat-icon>remove</mat-icon>
+  </button>
+</form>
