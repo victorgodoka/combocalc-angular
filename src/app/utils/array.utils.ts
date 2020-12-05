@@ -5,7 +5,7 @@ export const range = (end: number, start: number = 0) =>
   Array.from({ length: end - start + 1 }, (_, i) => i + start);
 
 /**
- * Merges two arrays together into a single array with tuoples for each value of the previous arrays.
+ * Merges two arrays together into a single array with tuples for each value of the previous arrays.
  */
 export const merge = <T1, T2>(arr1: T1[], arr2: T2[]) =>
   Array.from(

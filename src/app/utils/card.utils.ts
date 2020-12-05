@@ -36,7 +36,7 @@ interface SearchGroup {
 
 /**
  *
- * @param cardCounts
+ * @param cardCounts the card groups and how many are in each
  * @param handSize number of cards user will draw from deck. Also called sampling size.
  * @param deckSize number of cards in the deck that the user has imported
  */
@@ -46,19 +46,19 @@ export const hypergeom = (
   deckSize: number
 ) => {
   const ranges = cardCounts.map(({ minDesired, maxDesired, copies }) => {
-    if (copies < maxDesired) return range(copies, minDesired);
-    if (handSize < maxDesired) return range(handSize, minDesired);
+    if (copies < maxDesired) { return range(copies, minDesired); }
+    if (handSize < maxDesired) { return range(handSize, minDesired); }
     return range(maxDesired, minDesired);
   });
 
   const permutations: number[][] = cartesianProduct(...ranges)
     .toArray()
-    .filter((args) => args.reduce(toTotal, 0) <= handSize); //calculate all the cases of min/max where it's less than or equal to handSize
+    .filter((args) => args.reduce(toTotal, 0) <= handSize); // calculate all the cases of min/max where it's less than or equal to handSize
   const totalCopies = cardCounts.map(({ copies }) => copies).reduce(toTotal, 0);
 
   let sum = 0;
   for (const args of permutations) {
-    const argsTotal = args.reduce(toTotal, 0); //sum of current row in permutations
+    const argsTotal = args.reduce(toTotal, 0); // sum of current row in permutations
     const argBinomials = merge(args, cardCounts).map(([arg, { copies }]) =>
       binomial(copies, arg)
     );
@@ -108,8 +108,8 @@ const applyAssociations = (
 };
 
 /**
- * @param searchGroups
- * @param cardCounts
+ * @param searchGroups the search groups
+ * @param cardCounts the card groups and how many are in each
  * @param handSize number of cards user will draw from deck. Also called sampling size.
  * @param deckSize number of cards in the deck that the user has imported
  * Example:
@@ -131,9 +131,10 @@ export const comboCalc = (
   handSize: number,
   deckSize: number
 ) => {
-  //Case 0 - When user specifies no searchers
-  if (searchGroups.map(({ copies }) => copies).reduce(toTotal, 0) === 0)
+  // Case 0 - When user specifies no searchers
+  if (searchGroups.map(({ copies }) => copies).reduce(toTotal, 0) === 0) {
     return hypergeom(cardCounts, handSize, deckSize);
+  }
 
   let sum = 0;
   for (const searchGroup of searchGroups) {
