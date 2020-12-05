@@ -21,7 +21,7 @@ export class AppComponent {
   constructor(private readonly fb: FormBuilder) { }
 
   public file: any;
-  public cardNames: string[];
+  public deckData: string[];
   public omega: string;
 
   public dynamicForm = this.fb.group({
@@ -115,7 +115,7 @@ export class AppComponent {
     fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${uniqueIds.join(",")}`)
       .then((res) => res.json())
       .then(({ data }) => {
-        this.cardNames = data.map(c => c.name)
+        this.deckData = deck.map(id => data.find(c => +c.id === +id))
       })
   }
 

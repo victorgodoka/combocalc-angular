@@ -1,5 +1,5 @@
 <main class="form">
-  <p class="disclaimer" *ngIf="!cardNames">Import a .ydk or input an Omega Deck code to continue</p>
+  <p class="disclaimer" *ngIf="!deckData">Import a .ydk or input an Omega Deck code to continue</p>
   <div class="line">
     <input type="file" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide">
     <label for="uploadydk" class="form-label mat-raised-button mat-primary">
@@ -10,7 +10,7 @@
     </button>
   </div>
 
-  <form *ngIf="cardNames" [formGroup]="dynamicForm">
+  <form *ngIf="deckData" [formGroup]="dynamicForm">
     <div>
       <h1> Probablity {{ probablity | async | percent:'1.2-2' }} </h1>
     </div>
@@ -30,7 +30,7 @@
       <mat-form-field>
         <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
         <mat-select disableOptionCentering formControlName="names" multiple>
-          <mat-option *ngFor="let cardName of cardNames" [value]="cardName">{{cardName}}</mat-option>
+          <mat-option *ngFor="let card of deckData" [value]="card.id">{{card.name}}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -65,7 +65,7 @@
       <mat-form-field>
         <mat-label>{{ "Search Group " + (i + 1) }}</mat-label>
         <mat-select disableOptionCentering formControlName="names" multiple>
-          <mat-option *ngFor="let cardName of cardNames" [value]="cardName">{{cardName}}</mat-option>
+          <mat-option *ngFor="let cardName of deckData" [value]="cardName">{{cardName}}</mat-option>
         </mat-select>
       </mat-form-field>
 
