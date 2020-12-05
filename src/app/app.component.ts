@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
-import {
-  FormBuilder,
-  FormArray,
-  FormGroup,
-} from '@angular/forms';
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
+
+import { Subject, combineLatest } from 'rxjs';
+import { map, startWith, withLatestFrom, shareReplay } from 'rxjs/operators';
 
 import { CardCount, comboCalc, SearchGroup } from './utils';
-import { map, startWith } from 'rxjs/operators';
+import { Card } from './card.interface';
 
 interface Form {
   searchers: SearchGroup[];
@@ -21,30 +20,8 @@ interface Form {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(private readonly fb: FormBuilder) {}
-
-  public file: any;
-  public deckData: string[];
-  public omega: string;
-
-  public dynamicForm = this.fb.group({
-    searchers: this.fb.array([]),
-    cards: this.fb.array([]),
-    deckSize: [0],
-    handSize: [5],
-  });
-
-  public probability = this.dynamicForm.valueChanges.pipe(
-    startWith(0),
-    map(({ searchers, cards, handSize, deckSize }: Form) => {
-      try {
-        return comboCalc(searchers, cards, handSize, deckSize);
-      } catch {
-        return 0;
-      }
-    })
-  );
 
   public get cards(): FormArray {
     return this.dynamicForm.controls.cards as FormArray;
@@ -66,17 +43,52 @@ export class AppComponent implements OnInit {
     );
   }
 
-  public ngOnInit(): void {
-    this.probability.subscribe({
-      next: console.log,
-      error: console.error,
-      complete: console.warn,
-    });
-  }
+  public file: any;
+  public deckData = new Subject<Card[]>();
+  public omega: string;
+
+  public dynamicForm = this.fb.group({
+    searchers: this.fb.array([]),
+    cards: this.fb.array([]),
+    deckSize: [0],
+    handSize: [5],
+  });
+
+  public probability = this.dynamicForm.valueChanges.pipe(
+    startWith(0),
+    map(({ searchers, cards, handSize, deckSize }: Form) => {
+      try {
+        return comboCalc(searchers, cards, handSize, deckSize);
+      } catch {
+        return 0;
+      }
+    })
+  );
+
+  public cardsWithFormInfo = combineLatest([
+    this.deckData,
+    this.dynamicForm.valueChanges,
+  ]).pipe(
+    map(([cards, form]) =>
+      cards.map((card, i) => ({
+        ...card,
+        groupID: form.cards.find(({ names }) =>
+          names.some?.((name) => name === `${card.name}${i}`)
+        )?.id as string | undefined,
+        searchGroupID: form.searchers.find(({ names }) =>
+          names.some?.((name) => name === `${card.name}${i}`)
+        )?.id as string | undefined,
+      }))
+    ),
+    shareReplay(1)
+  );
+
+  public test = this.cardsWithFormInfo.subscribe(console.log);
 
   public addCard(): void {
     this.cards.push(
       this.fb.group({
+        id: `${Date.now()}`,
         names: [''],
         minDesired: [0],
         maxDesired: [0],
@@ -91,6 +103,7 @@ export class AppComponent implements OnInit {
   public addSearcher(): void {
     this.searchers.push(
       this.fb.group({
+        id: `${Date.now()}`,
         names: [''],
         associations: [[]],
       })
@@ -124,7 +137,7 @@ export class AppComponent implements OnInit {
     )
       .then((res) => res.json())
       .then(({ data }) => {
-        this.deckData = deck.map((id) => data.find((c) => +c.id === +id));
+        this.deckData.next(deck.map((id) => data.find((c) => +c.id === +id)));
       });
   }
 
