@@ -83,3 +83,9 @@ mat-form-field~mat-form-field {
 .mat-option-text {
   padding-right: 32px;
 }
+
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
