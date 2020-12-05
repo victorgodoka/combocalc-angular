@@ -3,11 +3,11 @@ import { cartesianProduct, combination } from 'js-combinatorics';
 import { range, toTotal, merge } from './array.utils';
 import { binomial } from './math.utils';
 
-interface CardCount {
+export interface CardCount {
   /**
-   * number of items selected in the dropdown. (This is a vector when it's a n>1 card combo.)
+   * searchers is number of cards in deck that can search for multiple different card groups.
    */
-  copies: number;
+  names: string[];
 
   /**
    * minimum number selected by user. Usually 1. (This is a vector when it's a n>1 card combo.)
@@ -20,11 +20,11 @@ interface CardCount {
   maxDesired: number;
 }
 
-interface SearchGroup {
+export interface SearchGroup {
   /**
    * searchers is number of cards in deck that can search for multiple different card groups.
    */
-  copies: number;
+  names: string[];
 
   /**
    * are which card groups from the searchers can be searched.
@@ -45,8 +45,8 @@ export const hypergeom = (
   handSize: number,
   deckSize: number
 ) => {
-  const ranges = cardCounts.map(({ minDesired, maxDesired, copies }) => {
-    if (copies < maxDesired) { return range(copies, minDesired); }
+  const ranges = cardCounts.map(({ minDesired, maxDesired, names }) => {
+    if (names.length < maxDesired) { return range(names.length, minDesired); }
     if (handSize < maxDesired) { return range(handSize, minDesired); }
     return range(maxDesired, minDesired);
   });
@@ -54,13 +54,13 @@ export const hypergeom = (
   const permutations: number[][] = cartesianProduct(...ranges)
     .toArray()
     .filter((args) => args.reduce(toTotal, 0) <= handSize); // calculate all the cases of min/max where it's less than or equal to handSize
-  const totalCopies = cardCounts.map(({ copies }) => copies).reduce(toTotal, 0);
+  const totalCopies = cardCounts.map(({ names }) => names.length).reduce(toTotal, 0);
 
   let sum = 0;
   for (const args of permutations) {
     const argsTotal = args.reduce(toTotal, 0); // sum of current row in permutations
-    const argBinomials = merge(args, cardCounts).map(([arg, { copies }]) =>
-      binomial(copies, arg)
+    const argBinomials = merge(args, cardCounts).map(([arg, { names }]) =>
+      binomial(names.length, arg)
     );
     sum += argBinomials.reduce(
       (acc, result) => acc * result,
@@ -79,10 +79,10 @@ const applySearchGroup = (
 ): CardCount[] => {
   return [
     ...cardCounts.map((cardCount) => ({ ...cardCount })),
-    ...searchGroups.map(({ copies }, i) => ({
-      copies,
+    ...searchGroups.map(({ names }, i) => ({
+      names,
       minDesired: i === index ? associationCount : 0,
-      maxDesired: i === index ? copies : 0,
+      maxDesired: i === index ? names.length : 0,
     })),
   ];
 };
@@ -132,7 +132,7 @@ export const comboCalc = (
   deckSize: number
 ) => {
   // Case 0 - When user specifies no searchers
-  if (searchGroups.map(({ copies }) => copies).reduce(toTotal, 0) === 0) {
+  if (searchGroups.map(({ names }) => names.length).reduce(toTotal, 0) === 0) {
     return hypergeom(cardCounts, handSize, deckSize);
   }
 
@@ -146,7 +146,7 @@ export const comboCalc = (
 
     const possibleSearchers = Math.min(
       searchGroup.associations.length,
-      searchGroup.copies
+      searchGroup.names.length
     );
     for (const searcherCount of range(possibleSearchers, 1)) {
       for (const associations of combination(

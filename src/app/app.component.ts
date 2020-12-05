@@ -6,8 +6,15 @@ import {
   FormGroup,
 } from '@angular/forms';
 
-import { comboCalc } from './utils';
+import { CardCount, comboCalc, SearchGroup } from './utils';
 import { map, startWith } from 'rxjs/operators';
+
+interface Form {
+  searchers: SearchGroup[];
+  cards: CardCount[];
+  handSize: number;
+  deckSize: number;
+}
 
 @Component({
   selector: 'app-root',
@@ -30,7 +37,7 @@ export class AppComponent implements OnInit {
 
   public probability = this.dynamicForm.valueChanges.pipe(
     startWith(0),
-    map(({ searchers, cards, handSize, deckSize }) => {
+    map(({ searchers, cards, handSize, deckSize }: Form) => {
       try {
         return comboCalc(searchers, cards, handSize, deckSize);
       } catch {
@@ -71,7 +78,6 @@ export class AppComponent implements OnInit {
     this.cards.push(
       this.fb.group({
         names: [''],
-        copies: [0],
         minDesired: [0],
         maxDesired: [0],
       })
@@ -86,7 +92,6 @@ export class AppComponent implements OnInit {
     this.searchers.push(
       this.fb.group({
         names: [''],
-        copies: [0],
         associations: [[]],
       })
     );
