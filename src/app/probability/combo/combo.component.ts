@@ -82,8 +82,6 @@ export class ComboComponent implements OnChanges {
     })
   );
 
-  public test = this.cardsWithFormInfo.subscribe(console.log);
-
   public ngOnChanges(changes: SimpleChanges): void {
     this.form$.next(changes.form.currentValue);
   }

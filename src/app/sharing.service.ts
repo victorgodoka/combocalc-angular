@@ -29,10 +29,8 @@ export class SharingService {
   }
 
   public async findByShareID(id: string): Promise<ProbabilityData | null> {
-    console.log();
     const doc = await this.fireStore.doc<ShareDoc>(`shares/${id}`).ref.get();
     const data = doc.data();
-    console.log(this.decode(data.encoded));
     return data ? this.decode(data.encoded) : null;
   }
 
@@ -40,7 +38,6 @@ export class SharingService {
     const encoded = this.encode(data);
     const id = this.fireStore.createId();
     await this.fireStore.doc<ShareDoc>(`shares/${id}`).set({ encoded });
-    console.log(id);
     return id;
   }
 }
