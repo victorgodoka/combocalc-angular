@@ -29,14 +29,14 @@ export class ProbabilityComponent implements AfterViewInit {
   );
 
   public addCombo = (combo?: ComboForm) => {
-    const cards = combo.cards?.map((card) =>
+    const cards = combo?.cards?.map((card) =>
       this.fb.group(
         Object.fromEntries(
           Object.entries(card).map(([key, value]) => [key, [value]])
         )
       )
     );
-    const searchers = combo.searchers?.map((searcher) =>
+    const searchers = combo?.searchers?.map((searcher) =>
       this.fb.group(
         Object.fromEntries(
           Object.entries(searcher).map(([key, value]) => [key, [value]])
@@ -48,7 +48,7 @@ export class ProbabilityComponent implements AfterViewInit {
       this.fb.group({
         cards: this.fb.array(cards ?? []),
         searchers: this.fb.array(searchers ?? []),
-        handSize: [combo.handSize ?? 5],
+        handSize: [combo?.handSize ?? 5],
       })
     );
   }
