@@ -1,8 +1,28 @@
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@font-face {
+  font-family: 'Candara', sans-serif;
+  src: url('../src/assets/Candara.woff2') format('woff2'),
+    url('../src/assets/Candara.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: 'Candara', sans-serif;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
 
 body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
+  background: url('../src/assets/bg.png') center center no-repeat #000;
+  background-size: cover;
+  font-size: 18px;
 }
 .basic-container {
   padding: 30px;
@@ -11,4 +31,30 @@ body {
   font-size: 8pt;
   float: right;
   margin: 8px;
+}
+
+.mat-option-text {
+  padding-right: 32px;
+}
+
+.mat-expansion-panel-body {
+  overflow-y: scroll;
+  max-height: calc(100vh - 150px);
+  padding-bottom: 60px;
+}
+
+.mat-expansion-panel {
+  margin-bottom: 20px !important;
+}
+
+.mat-expansion-panel-body img {
+  width: 120px;
+}
+
+.mat-form-field.name_input {
+  width: 100%;
+}
+
+.mat-form-field+.mat-form-field {
+  margin-left: 20px;
 }

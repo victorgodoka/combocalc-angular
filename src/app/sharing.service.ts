@@ -25,7 +25,7 @@ export class SharingService {
   }
 
   public encode(data: ProbabilityData): string {
-    return btoa(JSON.stringify(data));
+    return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
   }
 
   public async findByShareID(id: string): Promise<ProbabilityData | null> {
@@ -34,10 +34,9 @@ export class SharingService {
     return data ? this.decode(data.encoded) : null;
   }
 
-  public async share(data: ProbabilityData): Promise<string> {
+  public saveShare (docID: string, data: ProbabilityData): void {
     const encoded = this.encode(data);
-    const id = this.fireStore.createId();
-    await this.fireStore.doc<ShareDoc>(`shares/${id}`).set({ encoded });
-    return id;
+    console.log("aaa", docID, data)
+    this.fireStore.doc<ShareDoc>(`shares/${docID}`).set({ encoded });
   }
 }

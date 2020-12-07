@@ -9,13 +9,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatTableModule  } from '@angular/material/table';
-import { MatSlideToggleModule  } from '@angular/material/slide-toggle';
-import {AngularFireModule} from '@angular/fire';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
+import { MatTableModule } from '@angular/material/table';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AngularFireModule } from '@angular/fire';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { AppComponent } from './app.component';
-import {AppRoutingModule} from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { ProbabilityComponent } from './probability/probability.component';
 import { ComboComponent } from './probability/combo/combo.component';
 
@@ -43,9 +45,10 @@ import { ComboComponent } from './probability/combo/combo.component';
     MatTableModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatExpansionModule,
     AppRoutingModule,
   ],
   declarations: [AppComponent, ProbabilityComponent, ComboComponent],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

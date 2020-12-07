@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form class="combo-form" [formGroup]="form">
   <div>
     <h1>Probability {{ probability | async | percent: "1.2-2" }}</h1>
   </div>
@@ -22,11 +22,11 @@
   </div>
   <h2>Cards</h2>
   <div
-    class="form-group"
+    class="form-group card-group"
     *ngFor="let group of cardGroups; let i = index"
     [formGroup]="group"
   >
-    <mat-form-field>
+    <mat-form-field class="name_input">
       <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
       <mat-select disableOptionCentering formControlName="names" multiple>
         <mat-option
@@ -47,22 +47,22 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="number_input">
       <mat-label>Min Desired</mat-label>
-      <input type="number" matInput formControlName="minDesired" />
+      <input type="number" (input)="inputMin(group, $event)" matInput formControlName="minDesired" />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="number_input">
       <mat-label>Max Desired</mat-label>
-      <input type="number" matInput formControlName="maxDesired" />
+      <input type="number" (input)="inputMax(group, $event)" matInput formControlName="maxDesired" />
     </mat-form-field>
   </div>
 
-  <button type="button" mat-icon-button (click)="addCard()">
+  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="addCard()">
     <mat-icon>add</mat-icon>
   </button>
 
-  <button type="button" mat-icon-button (click)="removeCard()">
+  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="removeCard()">
     <mat-icon>remove</mat-icon>
   </button>
   <h2 class="title">
@@ -80,7 +80,7 @@
     *ngFor="let group of searcherGroups; let i = index"
     [formGroup]="group"
   >
-    <mat-form-field>
+    <mat-form-field class="name_input">
       <mat-label>{{ "Search Group " + (i + 1) }}</mat-label>
       <mat-select disableOptionCentering formControlName="names" multiple>
         <mat-option

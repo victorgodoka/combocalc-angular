@@ -82,6 +82,31 @@ export class ComboComponent implements OnChanges {
     })
   );
 
+  public inputMin (group, $event) {
+    if (+$event.target.value < 0) {
+      $event.target.value = 0
+    } else if (+$event.target.value >= +group.controls.maxDesired.value) {
+      group.controls.maxDesired.setValue($event.target.value)
+      $event.target.value = +$event.target.value;
+    } else {
+      $event.target.value = +$event.target.value;
+    }
+  }
+
+  public inputMax (group, $event) {
+    console.log(group.controls.names.length)
+    if (+$event.target.value < 0) {
+      $event.target.value = 0
+    } else if (+$event.target.value <= +group.controls.minDesired.value) {
+      group.controls.minDesired.setValue($event.target.value)
+      $event.target.value = +$event.target.value;
+    } else if (+$event.target.value >= +group.controls.names.value.length) {
+      $event.target.value = +group.controls.names.value.length;
+    } else {
+      $event.target.value = +$event.target.value;
+    }
+  }
+
   public ngOnChanges(changes: SimpleChanges): void {
     this.form$.next(changes.form.currentValue);
   }
