@@ -29,6 +29,20 @@
         </div>
       </mat-expansion-panel>
       <form [formGroup]="dynamicForm">
+        <div class="export-area">
+          <button (click)="copyCodes('omega')" type="button" mat-raised-button mat-primary>
+            Export to Omega Code
+          </button>
+          <button (click)="dyanmicDownloadByHtmlTag('ydk', '.ydk')" type=" button" mat-raised-button mat-primary>
+            Export to .ydk
+          </button>
+          <button (click)="copyCodes('ydke')" type="button" mat-raised-button mat-primary>
+            Export to .ydke code
+          </button>
+          <button (click)="dyanmicDownloadByHtmlTag('names', '.txt')" type="button" mat-raised-button mat-primary>
+            Export Decklist
+          </button>
+        </div>
         <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
         <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
           Link</button>

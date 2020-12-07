@@ -1,6 +1,6 @@
 <ng-container>
   <h1 mat-dialog-title>Import your Decklist</h1>
-  <form mat-dialog-content (submit)="submit($event)">
+  <form mat-dialog-content>
     <mat-form-field>
       <mat-label>Deck Name (optional)</mat-label>
       <input [(ngModel)]="data.deckName" name="deckName" matInput placeholder="" />

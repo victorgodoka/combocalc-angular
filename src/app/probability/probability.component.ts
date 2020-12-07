@@ -30,11 +30,12 @@ export class ProbabilityComponent implements AfterViewInit {
   public shareLink: string = "";
   public deckTextList: string = "";
   public fullDeckList: any;
+  public formatExports: any;
   public fullProbability: number;
 
   public readonly dynamicForm = this.fb.array([]);
 
-  public async copyShareLink() {
+  public async copyShareLink () {
     let id = this.fireStore.createId();
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -95,7 +96,7 @@ export class ProbabilityComponent implements AfterViewInit {
 
         setTimeout(() => {
           this.deckData$.next(deckList);
-          this.fullDeckList.next(fullDeckList);
+          this.fullDeckList = fullDeckList;
           form.forEach((combo) => this.addCombo(combo));
         });
       }
@@ -115,11 +116,12 @@ export class ProbabilityComponent implements AfterViewInit {
         );
 
       fetch(
-        `https://api.duelistsunite.org/decks/convert?pretty&to=json&list=${encodeURIComponent(fileReader.result as string)}`
+        `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(fileReader.result as string)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
           this.fullDeckList = JSON.parse(data.formats.json)
+          this.formatExports = data.formats;
         });
       this.readDeck(idDeck);
     };
@@ -141,11 +143,12 @@ export class ProbabilityComponent implements AfterViewInit {
     this.omega = prompt('Insert Omega Code here.');
     if (this.omega) {
       fetch(
-        `https://api.duelistsunite.org/decks/convert?pretty&to=json&list=${encodeURIComponent(this.omega)}`
+        `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
           this.fullDeckList = JSON.parse(data.formats.json);
+          this.formatExports = data.formats;
           this.readDeck(JSON.parse(data.formats.json).main);
         });
     }
@@ -164,14 +167,41 @@ export class ProbabilityComponent implements AfterViewInit {
       this.deckName = deckName || ""
       if(decklist) {
         fetch(
-          `https://api.duelistsunite.org/decks/convert?pretty&to=json&list=${encodeURIComponent(decklist)}`
+          `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(decklist)}`
         )
           .then((res) => res.json())
           .then(({ data }) => {
             this.fullDeckList = JSON.parse(data.formats.json);
+            this.formatExports = data.formats;
             this.readDeck(JSON.parse(data.formats.json).main);
           });
       }
     });
+  }
+
+  public dyanmicDownloadByHtmlTag(input: string, format: string) {
+    const text = this.formatExports[input]
+    console.log(this.formatExports, text)
+    const element = { dynamicDownload: null as HTMLElement }
+    element.dynamicDownload = document.createElement('a');
+    element.dynamicDownload.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
+    element.dynamicDownload.setAttribute('download', this.deckName.replace(".ydk", "") + format);
+    var event = new MouseEvent("click");
+    element.dynamicDownload.dispatchEvent(event);
+  }
+
+  public copyCodes (code: string) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = this.formatExports[code];
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+    alert("Code copied to clipboard!")
   }
 }

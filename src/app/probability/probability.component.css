@@ -115,3 +115,11 @@ mat-form-field~mat-form-field {
 .decklist .grid img {
   width: 100%;
 }
+
+.export-area {
+  margin: 20px 0;
+}
+
+.export-area button + button {
+  margin-left: 10px;
+}
