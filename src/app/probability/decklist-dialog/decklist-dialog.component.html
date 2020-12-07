@@ -1,0 +1,15 @@
+<ng-container>
+  <h1 mat-dialog-title>Import your Decklist</h1>
+  <form mat-dialog-content (submit)="submit($event)">
+    <mat-form-field>
+      <mat-label>Deck Name (optional)</mat-label>
+      <input [(ngModel)]="data.deckName" name="deckName" matInput placeholder="" />
+    </mat-form-field>
+    <br />
+    <mat-form-field>
+      <mat-label>Decklist</mat-label>
+      <textarea [(ngModel)]="data.decklist" name="decklist" rows="10" matInput placeholder="{{placeholder}}"></textarea>
+    </mat-form-field>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial mat-raised-button mat-primary>Import</button>
+  </form>
+</ng-container>

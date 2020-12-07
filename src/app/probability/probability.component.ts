@@ -1,12 +1,13 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { Card } from '../card.interface';
 import { ActivatedRoute } from '@angular/router';
 import { ProbabilityData, SharingService } from '../sharing.service';
 import { ComboForm } from './combo/combo.component';
-import { first, switchMap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DecklistDialogComponent } from './decklist-dialog/decklist-dialog.component';
 
 @Component({
   templateUrl: './probability.component.html',
@@ -18,14 +19,16 @@ export class ProbabilityComponent implements AfterViewInit {
     private elem: ElementRef,
     private readonly fb: FormBuilder,
     private readonly share: SharingService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    public readonly decklistTextDialog: MatDialog
   ) { }
 
   public file: any;
   public readonly deckData$ = new BehaviorSubject<Card[]>([]);
   public omega: string;
-  public deckname: string = "";
+  public deckName: string = "";
   public shareLink: string = "";
+  public deckTextList: string = "";
   public fullDeckList: any;
   public fullProbability: number;
 
@@ -101,7 +104,7 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public uploadDeck(e): void {
     this.file = e.target.files[0];
-    this.deckname = this.file.name
+    this.deckName = this.file.name
     const fileReader = new FileReader();
     fileReader.onload = () => {
       const idDeck = (fileReader.result as string)
@@ -112,7 +115,7 @@ export class ProbabilityComponent implements AfterViewInit {
         );
 
       fetch(
-        `http://51.222.12.115:7000/convert?pretty&to=json&list=${encodeURIComponent(fileReader.result as string)}`
+        `https://api.duelistsunite.org/decks/convert?pretty&to=json&list=${encodeURIComponent(fileReader.result as string)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
@@ -134,16 +137,41 @@ export class ProbabilityComponent implements AfterViewInit {
       });
   }
 
-  public openDialog(): void {
+  public importOmega(): void {
     this.omega = prompt('Insert Omega Code here.');
     if (this.omega) {
       fetch(
-        `http://51.222.12.115:7000/convert?pretty&to=json&list=${encodeURIComponent(this.omega)}`
+        `https://api.duelistsunite.org/decks/convert?pretty&to=json&list=${encodeURIComponent(this.omega)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
+          this.fullDeckList = JSON.parse(data.formats.json);
           this.readDeck(JSON.parse(data.formats.json).main);
         });
     }
+  }
+
+  public importText(): void {
+    const decklistDialog = this.decklistTextDialog.open(DecklistDialogComponent, {
+      width: '100%',
+      data: {
+        deckName: this.deckName,
+        decklist: this.deckTextList
+      }
+    })
+
+    decklistDialog.afterClosed().subscribe(({ deckName, decklist }) => {
+      this.deckName = deckName || ""
+      if(decklist) {
+        fetch(
+          `https://api.duelistsunite.org/decks/convert?pretty&to=json&list=${encodeURIComponent(decklist)}`
+        )
+          .then((res) => res.json())
+          .then(({ data }) => {
+            this.fullDeckList = JSON.parse(data.formats.json);
+            this.readDeck(JSON.parse(data.formats.json).main);
+          });
+      }
+    });
   }
 }

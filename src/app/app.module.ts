@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AngularFireModule } from '@angular/fire';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
@@ -20,6 +21,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ProbabilityComponent } from './probability/probability.component';
 import { ComboComponent } from './probability/combo/combo.component';
+import { DecklistDialogComponent } from './probability/decklist-dialog/decklist-dialog.component';
 
 @NgModule({
   imports: [
@@ -47,8 +49,9 @@ import { ComboComponent } from './probability/combo/combo.component';
     MatSlideToggleModule,
     MatExpansionModule,
     AppRoutingModule,
+    MatFormFieldModule
   ],
-  declarations: [AppComponent, ProbabilityComponent, ComboComponent],
+  declarations: [AppComponent, ProbabilityComponent, ComboComponent, DecklistDialogComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

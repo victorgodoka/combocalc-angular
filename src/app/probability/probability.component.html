@@ -7,19 +7,25 @@
             Decklist
           </mat-panel-title>
           <mat-panel-description>
-            {{ deckname }}
+            {{ deckName }}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <div *ngIf="fullDeckList">
+        <div class="decklist" *ngIf="fullDeckList">
           <h3>main</h3>
-          <img *ngFor="let card of fullDeckList.main"
-            src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          <div class="grid">
+            <img *ngFor="let card of fullDeckList.main"
+              src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          </div>
           <h3>extra</h3>
-          <img *ngFor="let card of fullDeckList.extra"
-            src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          <div class="grid">
+            <img *ngFor="let card of fullDeckList.extra"
+              src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          </div>
           <h3>side</h3>
-          <img *ngFor="let card of fullDeckList.side"
-            src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          <div class="grid">
+            <img *ngFor="let card of fullDeckList.side"
+              src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          </div>
         </div>
       </mat-expansion-panel>
       <form [formGroup]="dynamicForm">
@@ -39,12 +45,16 @@
       Import a .ydk or input an Omega Deck code to continue
     </p>
     <div class="line">
-      <input type="file" accept=".ydk, .ydke, *.txt" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide" />
+      <input type="file" accept=".ydk, .ydke, *.txt" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)"
+        class="hide" />
       <label for="uploadydk" class="form-label mat-raised-button mat-primary">
         <mat-icon>cloud_upload</mat-icon> Import .ydk
       </label>
-      <button (click)="openDialog()" mat-raised-button mat-primary>
+      <button (click)="importOmega()" mat-raised-button mat-primary>
         <mat-icon>code</mat-icon> Import Omega code
+      </button>
+      <button (click)="importText()" mat-raised-button mat-primary>
+        <mat-icon>code</mat-icon> Import Decklist
       </button>
     </div>
   </div>

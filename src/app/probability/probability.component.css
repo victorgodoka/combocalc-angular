@@ -100,3 +100,18 @@ mat-form-field~mat-form-field {
   margin-left: 20px;
   text-decoration: none;
 }
+
+.decklist .grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 5px;
+}
+
+.decklist h3 {
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.decklist .grid img {
+  width: 100%;
+}

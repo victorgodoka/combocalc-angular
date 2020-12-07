@@ -47,10 +47,6 @@ body {
   margin-bottom: 20px !important;
 }
 
-.mat-expansion-panel-body img {
-  width: 120px;
-}
-
 .mat-form-field.name_input {
   width: 100%;
 }
