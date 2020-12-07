@@ -103,7 +103,7 @@ mat-form-field~mat-form-field {
 
 .decklist .grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 5px;
 }
 
@@ -118,8 +118,22 @@ mat-form-field~mat-form-field {
 
 .export-area {
   margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.export-area button + button {
-  margin-left: 10px;
+.export-area button {
+  margin: 10px 0;
+}
+
+@media (min-width: 1024px) {
+  .export-area button+button {
+    margin-left: 10px;
+  }
+
+  .decklist .grid {
+    grid-template-columns: repeat(10, 1fr);
+  }
 }

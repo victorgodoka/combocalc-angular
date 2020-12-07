@@ -42,3 +42,18 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.small-field {
+  width: 100%;
+  max-width: 100px;
+}
+
+@media (max-width: 1023px) {
+  .group-line {
+    flex-wrap: wrap;
+  }
+
+  .group-line .name_input {
+    width: 100%;
+  }
+}
