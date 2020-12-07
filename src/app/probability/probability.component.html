@@ -38,7 +38,7 @@
       Import a .ydk or input an Omega Deck code to continue
     </p>
     <div class="line">
-      <input type="file" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide" />
+      <input type="file" accept=".ydk, .ydke, *.txt" name="uploadydk" id="uploadydk" (change)="uploadDeck($event)" class="hide" />
       <label for="uploadydk" class="form-label mat-raised-button mat-primary">
         <mat-icon>cloud_upload</mat-icon> Import .ydk
       </label>
