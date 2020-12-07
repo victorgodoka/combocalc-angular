@@ -15,6 +15,7 @@ import { FormBuilder } from '@angular/forms';
 export class ProbabilityComponent implements AfterViewInit {
   constructor(
     private readonly fireStore: AngularFirestore,
+    private elem: ElementRef,
     private readonly fb: FormBuilder,
     private readonly share: SharingService,
     private readonly route: ActivatedRoute
@@ -26,6 +27,7 @@ export class ProbabilityComponent implements AfterViewInit {
   public deckname: string = "";
   public shareLink: string = "";
   public fullDeckList: any;
+  public fullProbability: number;
 
   public readonly dynamicForm = this.fb.array([]);
 
@@ -74,6 +76,13 @@ export class ProbabilityComponent implements AfterViewInit {
       })
     );
   }
+
+  public probabilitySubscriber = this.dynamicForm.valueChanges.subscribe(() => {
+    setTimeout(() => {
+      let _sum = (Array.from(this.elem.nativeElement.querySelectorAll("[data-probability]")).reduce((a: any, e: any) => parseFloat(e.outerText.replace("%", "")) + a, 0) as number) / 100
+      this.fullProbability = Math.min(_sum, 1)
+    });
+  })
 
   public ngAfterViewInit(): void {
     this.shareLink = location.origin + "/share/" + this.route.snapshot.params['shareID']
