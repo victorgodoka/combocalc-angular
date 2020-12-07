@@ -8,6 +8,7 @@ import { ComboForm } from './probability/combo/combo.component';
 export interface ProbabilityData {
   form: ComboForm[];
   deckList: Card[];
+  fullDeckList: any;
 }
 
 export interface ShareDoc {
@@ -34,7 +35,7 @@ export class SharingService {
     return data ? this.decode(data.encoded) : null;
   }
 
-  public saveShare (docID: string, data: ProbabilityData): void {
+  public saveShare(docID: string, data: ProbabilityData): void {
     const encoded = this.encode(data);
     console.log("aaa", docID, data)
     this.fireStore.doc<ShareDoc>(`shares/${docID}`).set({ encoded });

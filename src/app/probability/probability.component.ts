@@ -25,6 +25,7 @@ export class ProbabilityComponent implements AfterViewInit {
   public omega: string;
   public deckname: string = "";
   public shareLink: string = "";
+  public fullDeckList: any;
 
   public readonly dynamicForm = this.fb.array([]);
 
@@ -44,7 +45,8 @@ export class ProbabilityComponent implements AfterViewInit {
     document.body.removeChild(selBox);
     const deckList = this.deckData$.value
     const form = this.dynamicForm.value
-    this.share.saveShare(id, { deckList, form })
+    const fullDeckList = this.fullDeckList
+    this.share.saveShare(id, { deckList, form, fullDeckList })
     alert("Link copied to clipboard!")
   }
 
@@ -77,10 +79,11 @@ export class ProbabilityComponent implements AfterViewInit {
     this.shareLink = location.origin + "/share/" + this.route.snapshot.params['shareID']
     this.route.data.subscribe(({ data }) => {
       if (data) {
-        const { deckList, form } = data as ProbabilityData;
+        const { deckList, form, fullDeckList } = data as ProbabilityData;
 
         setTimeout(() => {
           this.deckData$.next(deckList);
+          this.fullDeckList.next(fullDeckList);
           form.forEach((combo) => this.addCombo(combo));
         });
       }
@@ -98,6 +101,14 @@ export class ProbabilityComponent implements AfterViewInit {
         .filter(
           (c) => c.length > 0 && !c.startsWith('#') && !c.startsWith('!')
         );
+
+      fetch(
+        `http://51.222.12.115:7000/convert?pretty&to=json&list=${encodeURIComponent(fileReader.result as string)}`
+      )
+        .then((res) => res.json())
+        .then(({ data }) => {
+          this.fullDeckList = JSON.parse(data.formats.json)
+        });
       this.readDeck(idDeck);
     };
     fileReader.readAsText(this.file);

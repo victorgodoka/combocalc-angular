@@ -49,12 +49,12 @@
 
     <mat-form-field class="number_input">
       <mat-label>Min Desired</mat-label>
-      <input type="number" (input)="inputMin(group, $event)" matInput formControlName="minDesired" />
+      <input type="number" (keydown)="preventArrowKey($event)" (input)="inputMin(group, $event)" matInput formControlName="minDesired" />
     </mat-form-field>
 
     <mat-form-field class="number_input">
       <mat-label>Max Desired</mat-label>
-      <input type="number" (input)="inputMax(group, $event)" matInput formControlName="maxDesired" />
+      <input type="number" (keydown)="preventArrowKey($event)" (input)="inputMax(group, $event)" matInput formControlName="maxDesired" />
     </mat-form-field>
   </div>
 
@@ -117,11 +117,11 @@
     </mat-form-field>
   </div>
 
-  <button type="button" mat-icon-button (click)="addSearcher()">
+  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="addSearcher()">
     <mat-icon>add</mat-icon>
   </button>
 
-  <button type="button" mat-icon-button (click)="removeSearcher()">
+  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="removeSearcher()">
     <mat-icon>remove</mat-icon>
   </button>
 </form>

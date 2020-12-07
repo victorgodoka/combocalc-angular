@@ -10,14 +10,22 @@
             {{ deckname }}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <img *ngFor="let card of deckData$ | async"
-          src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card.id }}.jpg" />
+        <div *ngIf="fullDeckList">
+          <h3>main</h3>
+          <img *ngFor="let card of fullDeckList.main"
+            src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          <h3>extra</h3>
+          <img *ngFor="let card of fullDeckList.extra"
+            src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+          <h3>side</h3>
+          <img *ngFor="let card of fullDeckList.side"
+            src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+        </div>
       </mat-expansion-panel>
       <form [formGroup]="dynamicForm">
         <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
-        <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share Link</button>
-        <a *ngIf="this.shareLink" target="_blank" class="share-link-anchor" href="{{ this.shareLink }}">Link to this
-          deck calc</a>
+        <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
+          Link</button>
         <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [deckData]="deckData" [form]="form">
         </app-combo>
       </form>

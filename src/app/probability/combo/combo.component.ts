@@ -22,7 +22,7 @@ export interface ComboForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboComponent implements OnChanges {
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder) { }
 
   private readonly subscriptions = new Subscription();
 
@@ -82,7 +82,13 @@ export class ComboComponent implements OnChanges {
     })
   );
 
-  public inputMin (group, $event) {
+  public preventArrowKey ($event) {
+    if ($event.keyCode === 38 || $event.keyCode === 40) {
+      $event.preventDefault()
+    }
+  }
+
+  public inputMin(group, $event) {
     if (+$event.target.value < 0) {
       $event.target.value = 0
     } else if (+$event.target.value >= +group.controls.maxDesired.value) {
@@ -93,8 +99,7 @@ export class ComboComponent implements OnChanges {
     }
   }
 
-  public inputMax (group, $event) {
-    console.log(group.controls.names.length)
+  public inputMax(group, $event) {
     if (+$event.target.value < 0) {
       $event.target.value = 0
     } else if (+$event.target.value <= +group.controls.minDesired.value) {
