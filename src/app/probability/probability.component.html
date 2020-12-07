@@ -47,7 +47,8 @@
         <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
           Link</button>
         <h1 *ngIf="fullProbability >= 0">Total probability: {{ fullProbability | percent: "1.2-2" }}</h1>
-        <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [deckData]="deckData" [form]="form">
+        <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [indexForm]="i" [deckData]="deckData"
+          [form]="form">
         </app-combo>
       </form>
     </div>

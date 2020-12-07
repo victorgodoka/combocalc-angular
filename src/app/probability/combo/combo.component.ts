@@ -27,6 +27,9 @@ export class ComboComponent implements OnChanges {
   private readonly subscriptions = new Subscription();
 
   @Input()
+  public readonly indexForm: any;
+
+  @Input()
   public readonly form = this.fb.group({});
 
   @Input()

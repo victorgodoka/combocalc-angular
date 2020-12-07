@@ -1,4 +1,5 @@
 <form class="combo-form" [formGroup]="form">
+  <h4>Combo {{ indexForm + 1 }}</h4>
   <div>
     <h2>Probability <span data-probability>{{ probability | async | percent: "1.2-2" }}</span></h2>
   </div>
