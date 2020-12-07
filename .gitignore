@@ -6,7 +6,6 @@
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
-
 # dependencies
 /node_modules
 
@@ -16,7 +15,7 @@ speed-measure-plugin*.json
 
 # IDEs and editors
 /.idea
-.project
+.firebase
 .classpath
 .c9/
 *.launch

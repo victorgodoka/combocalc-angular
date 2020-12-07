@@ -52,7 +52,8 @@ export class ProbabilityComponent implements AfterViewInit {
     const deckList = this.deckData$.value
     const form = this.dynamicForm.value
     const fullDeckList = this.fullDeckList
-    this.share.saveShare(id, { deckList, form, fullDeckList })
+    const formatExports = this.formatExports
+    this.share.saveShare(id, { deckList, form, fullDeckList, formatExports })
     alert("Link copied to clipboard!")
   }
 
@@ -92,11 +93,12 @@ export class ProbabilityComponent implements AfterViewInit {
     this.shareLink = location.origin + "/share/" + this.route.snapshot.params['shareID']
     this.route.data.subscribe(({ data }) => {
       if (data) {
-        const { deckList, form, fullDeckList } = data as ProbabilityData;
+        const { deckList, form, fullDeckList, formatExports } = data as ProbabilityData;
 
         setTimeout(() => {
           this.deckData$.next(deckList);
           this.fullDeckList = fullDeckList;
+          this.formatExports = formatExports;
           form.forEach((combo) => this.addCombo(combo));
         });
       }

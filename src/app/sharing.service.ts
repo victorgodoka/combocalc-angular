@@ -9,6 +9,7 @@ export interface ProbabilityData {
   form: ComboForm[];
   deckList: Card[];
   fullDeckList: any;
+  formatExports: any;
 }
 
 export interface ShareDoc {
