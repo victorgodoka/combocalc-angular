@@ -1,5 +1,5 @@
 <form class="combo-form" [formGroup]="form">
-  <h4>Combo {{ indexForm + 1 }}</h4>
+  <h4 class="right">Combo {{ indexForm + 1 }}</h4>
   <div>
     <h2>Probability <span data-probability>{{ probability | async | percent: "1.2-2" }}</span></h2>
   </div>
@@ -54,12 +54,22 @@
 
     <mat-form-field class="number_input small-field">
       <mat-label>Min</mat-label>
-      <input type="number" (keydown)="preventArrowKey($event)" (input)="inputMin(group, $event)" matInput formControlName="minDesired" />
+      <mat-select formControlName="minDesired">
+        <mat-option [value]="0">0</mat-option>
+        <mat-option *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
+          {{i+1}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field class="number_input small-field">
       <mat-label>Max</mat-label>
-      <input type="number" (keydown)="preventArrowKey($event)" (input)="inputMax(group, $event)" matInput formControlName="maxDesired" />
+      <mat-select formControlName="maxDesired">
+        <mat-option [value]="0">0</mat-option>
+        <mat-option *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
+          {{i+1}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
   </div>
 
