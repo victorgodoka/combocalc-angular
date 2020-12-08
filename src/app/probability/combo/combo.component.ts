@@ -95,8 +95,10 @@ export class ComboComponent implements OnChanges {
     if (+$event.target.value < 0) {
       $event.target.value = 0
     } else if (+$event.target.value >= +group.controls.maxDesired.value) {
-      group.controls.maxDesired.setValue($event.target.value)
+      group.controls.maxDesired.setValue(+$event.target.value)
       $event.target.value = +$event.target.value;
+    } else if (+$event.target.value >= +group.controls.names.value.length) {
+      $event.target.value = +group.controls.names.value.length;
     } else {
       $event.target.value = +$event.target.value;
     }
@@ -106,7 +108,7 @@ export class ComboComponent implements OnChanges {
     if (+$event.target.value < 0) {
       $event.target.value = 0
     } else if (+$event.target.value <= +group.controls.minDesired.value) {
-      group.controls.minDesired.setValue($event.target.value)
+      group.controls.minDesired.setValue(+$event.target.value)
       $event.target.value = +$event.target.value;
     } else if (+$event.target.value >= +group.controls.names.value.length) {
       $event.target.value = +group.controls.names.value.length;

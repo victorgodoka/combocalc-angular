@@ -63,6 +63,11 @@ input::-webkit-inner-spin-button {
   align-items: center;
 }
 
+.small-text {
+  display: block;
+  font-size: 12px;
+}
+
 @media (min-width: 1024px) {
   .mat-form-field+.mat-form-field {
     margin-left: 20px;

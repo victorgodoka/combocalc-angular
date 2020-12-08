@@ -45,7 +45,7 @@
 
 .small-field {
   width: 100%;
-  max-width: 100px;
+  max-width: 60px;
 }
 
 @media (max-width: 1023px) {

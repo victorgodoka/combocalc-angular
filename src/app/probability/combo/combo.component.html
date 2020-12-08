@@ -21,7 +21,11 @@
       />
     </mat-form-field>
   </div>
-  <h2>Cards</h2>
+  <h2>Cards
+    <button type="button" mat-icon-button
+      matTooltip="Select which card(s) you want in your hand as part of your combo. Each card group is unique from each other. You may select cards you do NOT want in your hand either by setting min and max to 0.">
+      <mat-icon>help</mat-icon>
+    </button></h2>
   <div
     class="form-group group-line card-group"
     *ngFor="let group of cardGroups; let i = index"
@@ -68,11 +72,8 @@
   </button>
   <h2 class="title">
     <span>Searchers</span>
-    <button
-      type="button"
-      mat-icon-button
-      matTooltip="Cards that search others and usually help to achieve the combo pieces (but are not in the combo themselves, like E - Emergency Call for HEROes )."
-    >
+    <button type="button" mat-icon-button
+      matTooltip="Cards that search for 2 or more of the card groups defined above. If it can only search for 1 card group, then include it as part of the card group above instead.">
       <mat-icon>help</mat-icon>
     </button>
   </h2>
@@ -116,6 +117,10 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <button type="button" mat-icon-button
+      matTooltip="Must select 2 or more card groups. If your searcher only can search 1 card group, then add the searcher in the card group instead and don't use this section.">
+      <mat-icon>help</mat-icon>
+    </button>
   </div>
 
   <button mat-raised-button mat-primary type="button" mat-icon-button (click)="addSearcher()">

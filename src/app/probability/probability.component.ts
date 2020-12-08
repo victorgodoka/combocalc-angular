@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Card } from '../card.interface';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProbabilityData, SharingService } from '../sharing.service';
 import { ComboForm } from './combo/combo.component';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -20,6 +20,7 @@ export class ProbabilityComponent implements AfterViewInit {
     private readonly fb: FormBuilder,
     private readonly share: SharingService,
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     public readonly decklistTextDialog: MatDialog
   ) { }
 
@@ -106,6 +107,14 @@ export class ProbabilityComponent implements AfterViewInit {
         });
       }
     });
+  }
+
+  public reset(): void {
+    if (this.route.toString().includes('share')) {
+      this.router.navigate(['/']);
+    } else {
+      location.reload();
+    }
   }
 
   public uploadDeck(e): void {
