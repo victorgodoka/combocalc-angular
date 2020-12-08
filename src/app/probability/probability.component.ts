@@ -25,6 +25,8 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public file: any;
   public readonly deckData$ = new BehaviorSubject<Card[]>([]);
+  public readonly autoCompleteCards$ = new BehaviorSubject<Card[]>([]);
+  public selectedCard: string;
   public omega: string;
   public deckName: string = "";
   public shareLink: string = "";
@@ -35,7 +37,7 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public readonly dynamicForm = this.fb.array([]);
 
-  public async copyShareLink () {
+  public async copyShareLink() {
     let id = this.fireStore.createId();
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -170,7 +172,7 @@ export class ProbabilityComponent implements AfterViewInit {
 
     decklistDialog.afterClosed().subscribe(({ deckName, decklist }) => {
       this.deckName = deckName || ""
-      if(decklist) {
+      if (decklist) {
         fetch(
           `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(decklist)}`
         )
@@ -196,7 +198,7 @@ export class ProbabilityComponent implements AfterViewInit {
     element.dynamicDownload.dispatchEvent(event);
   }
 
-  public copyCodes (code: string) {
+  public copyCodes(code: string) {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
@@ -210,4 +212,68 @@ export class ProbabilityComponent implements AfterViewInit {
     document.body.removeChild(selBox);
     alert("Code copied to clipboard!")
   }
-}
+
+  public deleteCard(deck: string, index: number, cardID: number) {
+    let _fullDeckListIdx = this.fullDeckList[deck].indexOf(cardID);
+    let _deckDataIdx = this.deckData$.value.findIndex(c => c.id === cardID)
+    if (_fullDeckListIdx > -1) {
+      this.fullDeckList[deck].splice(_fullDeckListIdx, 1);
+    }
+    if (_deckDataIdx > -1) {
+      let _temp = this.deckData$.value
+      _temp.splice(_deckDataIdx, 1)
+      this.deckData$.next(_temp)
+    }
+  }
+
+  public getLimitations (cardData: Card, deck: string) : boolean {
+    let result = true
+
+    if (deck === 'main' && this.fullDeckList[deck].length >= 60) {
+      result = false
+      alert('You already have the max cars in this deck.')
+    }
+
+    if (deck === 'extra' && this.fullDeckList[deck].length >= 15) {
+      result = false
+      alert('You already have the max cars in the Extra deck.')
+    }
+
+    if (this.fullDeckList[deck].filter(card => card.id === cardData.id).length >= 3) {
+      result = false
+      alert('You already have the max copies of this card.')
+    }
+
+    return result
+  }
+
+  public addCard(cardID: number) {
+    if (cardID) {
+      fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardID}`)
+        .then(res => res.json())
+        .then(({ data }) => {
+          let cardData: Card = data[0]
+          let deck = (cardData.type.includes("Link") || cardData.type.includes("Synchro") || cardData.type.includes("Fusion") || cardData.type.includes("XYZ")) ? "extra" : "main"
+          if (this.getLimitations (cardData, deck)) {
+            this.fullDeckList[deck].push(cardData.id);
+            let _temp = this.deckData$.value
+            _temp.push(cardData)
+            this.deckData$.next(_temp)
+          }
+        })
+        .finally(() => this.selectedCard = '')
+    }
+  }
+
+  public searchForCards () {
+    if (this.selectedCard.length > 3) {
+      fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${this.selectedCard}`)
+        .then(res => res.json())
+        .then(({ data }) => {
+          let cardData: Card[] = data
+          this.autoCompleteCards$.next(cardData)
+        })
+    }
+  }
+
+} 

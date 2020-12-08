@@ -14,20 +14,42 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="decklist" *ngIf="fullDeckList">
+          <mat-form-field class="full-width">
+            <input type="text" (input)="searchForCards()" placeholder="Select a card to add into your deck"
+              aria-label="Number" matInput [(ngModel)]="selectedCard" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option (click)="addCard(card.id)" *ngFor="let card of autoCompleteCards$ | async"
+                [value]="card.name">
+                <span class="text-option">{{ card.name }}</span>
+                <img class="image-option" src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
+              card.id
+            }}.jpg" />
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
           <h3>main</h3>
           <div class="grid">
-            <img *ngFor="let card of fullDeckList.main"
-              src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+            <div class="grid__image" *ngFor="let card of fullDeckList.main; let index = index">
+              <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('main', index, card)">delete
+              </mat-icon>
+              <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+            </div>
           </div>
           <h3>extra</h3>
           <div class="grid">
-            <img *ngFor="let card of fullDeckList.extra"
-              src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+            <div class="grid__image" *ngFor="let card of fullDeckList.extra; let index = index">
+              <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('extra', index, card)">delete
+              </mat-icon>
+              <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+            </div>
           </div>
           <h3>side</h3>
           <div class="grid">
-            <img *ngFor="let card of fullDeckList.side"
-              src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+            <div class="grid__image" *ngFor="let card of fullDeckList.side; let index = index">
+              <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('side', index, card)">delete
+              </mat-icon>
+              <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+            </div>
           </div>
         </div>
       </mat-expansion-panel>
@@ -49,16 +71,16 @@
             type="button" mat-raised-button mat-primary>
             Export DeckImage
           </a>
+        </div>
+        <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
+        <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
+          Link</button>
         <h1 *ngIf="fullProbability >= 0">Total probability: {{ fullProbability | percent: "1.2-2" }} <button
             type="button" mat-icon-button matTooltip="This is sum of all the individual probabilities of each combo. This means the probability of
             drawing any of the combos in your opening hand. Remember that each combo must be unique for this number to
             be accurate.">
             <mat-icon>help</mat-icon>
           </button></h1>
-        <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
-        <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
-          Link</button>
-        <h1 *ngIf="fullProbability >= 0">Total probability: {{ fullProbability | percent: "1.2-2" }}</h1>
         <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [indexForm]="i" [deckData]="deckData"
           [form]="form">
         </app-combo>

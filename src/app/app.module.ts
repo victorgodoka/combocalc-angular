@@ -14,6 +14,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AngularFireModule } from '@angular/fire';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
@@ -48,8 +49,9 @@ import { DecklistDialogComponent } from './probability/decklist-dialog/decklist-
     MatSelectModule,
     MatSlideToggleModule,
     MatExpansionModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
     AppRoutingModule,
-    MatFormFieldModule
   ],
   declarations: [AppComponent, ProbabilityComponent, ComboComponent, DecklistDialogComponent],
   bootstrap: [AppComponent],
