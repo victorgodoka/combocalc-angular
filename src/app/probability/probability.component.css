@@ -158,6 +158,18 @@ mat-form-field~mat-form-field {
   display: flex;
 }
 
+.first-group .mat-form-field {
+  color: #000;
+}
+
+.first-group {
+  color: #fff;
+  background: #fff;
+  padding: 20px 20px 10px 20px;
+  margin: 20px 0;
+  border-radius: 20px 0;
+}
+
 @media (min-width: 1024px) {
   .export-area button+button {
     margin-left: 10px;

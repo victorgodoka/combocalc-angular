@@ -85,36 +85,8 @@ export class ComboComponent implements OnChanges {
     })
   );
 
-  public preventArrowKey ($event) {
-    if ($event.keyCode === 38 || $event.keyCode === 40) {
-      $event.preventDefault()
-    }
-  }
-
-  public inputMin(group, $event) {
-    if (+$event.target.value < 0) {
-      $event.target.value = 0
-    } else if (+$event.target.value >= +group.controls.maxDesired.value) {
-      group.controls.maxDesired.setValue(+$event.target.value)
-      $event.target.value = +$event.target.value;
-    } else if (+$event.target.value >= +group.controls.names.value.length) {
-      $event.target.value = +group.controls.names.value.length;
-    } else {
-      $event.target.value = +$event.target.value;
-    }
-  }
-
-  public inputMax(group, $event) {
-    if (+$event.target.value < 0) {
-      $event.target.value = 0
-    } else if (+$event.target.value <= +group.controls.minDesired.value) {
-      group.controls.minDesired.setValue(+$event.target.value)
-      $event.target.value = +$event.target.value;
-    } else if (+$event.target.value >= +group.controls.names.value.length) {
-      $event.target.value = +group.controls.names.value.length;
-    } else {
-      $event.target.value = +$event.target.value;
-    }
+  public changeMax (e, group) {
+    group.controls.maxDesired.value = group.controls.names.value.length
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

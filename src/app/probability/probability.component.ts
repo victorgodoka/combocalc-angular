@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProbabilityData, SharingService } from '../sharing.service';
 import { ComboForm } from './combo/combo.component';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DecklistDialogComponent } from './decklist-dialog/decklist-dialog.component';
 

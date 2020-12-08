@@ -33,7 +33,7 @@
   >
     <mat-form-field class="name_input">
       <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
-      <mat-select disableOptionCentering formControlName="names" multiple>
+      <mat-select [selectionChange]="changeMax(e, group)" disableOptionCentering formControlName="names" multiple>
         <mat-option
           *ngFor="let card of cardsWithFormInfo | async; let index = index"
           [value]="card.name + index"
@@ -66,7 +66,8 @@
       <mat-label>Max</mat-label>
       <mat-select formControlName="maxDesired">
         <mat-option [value]="0">0</mat-option>
-        <mat-option *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
+        <mat-option 
+          *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
           {{i+1}}
         </mat-option>
       </mat-select>
