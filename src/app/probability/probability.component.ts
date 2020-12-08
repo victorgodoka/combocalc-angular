@@ -99,6 +99,7 @@ export class ProbabilityComponent implements AfterViewInit {
           this.deckData$.next(deckList);
           this.fullDeckList = fullDeckList;
           this.formatExports = formatExports;
+          this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           form.forEach((combo) => this.addCombo(combo));
         });
       }
@@ -124,6 +125,7 @@ export class ProbabilityComponent implements AfterViewInit {
         .then(({ data }) => {
           this.fullDeckList = JSON.parse(data.formats.json)
           this.formatExports = data.formats;
+          this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
         });
       this.readDeck(idDeck);
     };
@@ -151,6 +153,7 @@ export class ProbabilityComponent implements AfterViewInit {
         .then(({ data }) => {
           this.fullDeckList = JSON.parse(data.formats.json);
           this.formatExports = data.formats;
+          this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           this.readDeck(JSON.parse(data.formats.json).main);
         });
     }
@@ -175,6 +178,7 @@ export class ProbabilityComponent implements AfterViewInit {
           .then(({ data }) => {
             this.fullDeckList = JSON.parse(data.formats.json);
             this.formatExports = data.formats;
+            this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
             this.readDeck(JSON.parse(data.formats.json).main);
           });
       }

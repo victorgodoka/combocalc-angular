@@ -4,7 +4,10 @@
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Decklist
+            Decklist <button type="button" mat-icon-button
+              matTooltip="Adding or removing cards after you put a combo might bug it, before you do any changes. Please, do it carefully.">
+              <mat-icon>help</mat-icon>
+            </button>
           </mat-panel-title>
           <mat-panel-description>
             {{ deckName }}
@@ -42,7 +45,16 @@
           <button (click)="dyanmicDownloadByHtmlTag('names', '.txt')" type="button" mat-raised-button mat-primary>
             Export Decklist
           </button>
-        </div>
+          <a target="_blank" href="https://api.duelistsunite.org/decks/imageify?quality=100&list={{formatExports.imagefy}}"
+            type="button" mat-raised-button mat-primary>
+            Export DeckImage
+          </a>
+        <h1 *ngIf="fullProbability >= 0">Total probability: {{ fullProbability | percent: "1.2-2" }} <button
+            type="button" mat-icon-button matTooltip="This is sum of all the individual probabilities of each combo. This means the probability of
+            drawing any of the combos in your opening hand. Remember that each combo must be unique for this number to
+            be accurate.">
+            <mat-icon>help</mat-icon>
+          </button></h1>
         <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
         <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
           Link</button>

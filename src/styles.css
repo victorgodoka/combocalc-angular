@@ -58,6 +58,11 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+  align-items: center;
+}
+
 @media (min-width: 1024px) {
   .mat-form-field+.mat-form-field {
     margin-left: 20px;

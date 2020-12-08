@@ -112,7 +112,7 @@
         <mat-option
           *ngFor="let cardName of cardGroups; let value = index"
           [value]="value"
-          >{{ cardName.value.names }}
+          >Card Group {{ value + 1 }}
         </mat-option>
       </mat-select>
     </mat-form-field>
