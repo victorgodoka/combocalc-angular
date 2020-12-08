@@ -72,6 +72,15 @@ input::-webkit-inner-spin-button {
   text-align: right;
 }
 
+.mat-tooltip {
+  font-size: 14px;
+}
+
+.form-title {
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 1024px) {
   .mat-form-field+.mat-form-field {
     margin-left: 20px;

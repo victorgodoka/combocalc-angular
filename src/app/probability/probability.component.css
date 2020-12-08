@@ -152,6 +152,9 @@ mat-form-field~mat-form-field {
 
 .reset {
   background-color: rgb(190, 40, 52);
+  color: #fff;
+  font-weight: bold;
+  margin-left: 20px;
 }
 
 .small-line {
@@ -168,6 +171,8 @@ mat-form-field~mat-form-field {
   padding: 20px 20px 10px 20px;
   margin: 20px 0;
   border-radius: 20px 0;
+  display: flex;
+  align-items: end;
 }
 
 @media (min-width: 1024px) {

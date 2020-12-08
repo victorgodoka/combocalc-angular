@@ -3,9 +3,10 @@
   <div>
     <h2>Probability <span data-probability>{{ probability | async | percent: "1.2-2" }}</span></h2>
   </div>
-  <h2>Cards
+  <h2 class="form-title">
+    <span>Cards</span>
     <button type="button" mat-icon-button
-      matTooltip="Select which card(s) you want in your hand as part of your combo. Each card group is unique from each other. You may select cards you do NOT want in your hand either by setting min and max to 0.">
+      matTooltipPosition="right" matTooltip="Select which card(s) you want in your hand as part of your combo. Each card group is unique from each other. You may select cards you do NOT want in your hand either by setting min and max to 0.">
       <mat-icon>help</mat-icon>
     </button></h2>
   <div
@@ -66,7 +67,7 @@
   <h2 class="title">
     <span>Searchers</span>
     <button type="button" mat-icon-button
-      matTooltip="Cards that search for 2 or more of the card groups defined above. If it can only search for 1 card group, then include it as part of the card group above instead.">
+      matTooltipPosition="right" matTooltip="Cards that search for 2 or more of the card groups defined above. If it can only search for 1 card group, then include it as part of the card group above instead.">
       <mat-icon>help</mat-icon>
     </button>
   </h2>
@@ -111,7 +112,7 @@
       </mat-select>
     </mat-form-field>
     <button type="button" mat-icon-button
-      matTooltip="Must select 2 or more card groups. If your searcher only can search 1 card group, then add the searcher in the card group instead and don't use this section.">
+      matTooltipPosition="above" matTooltip="Must select 2 or more card groups. If your searcher only can search 1 card group, then add the searcher in the card group instead and don't use this section.">
       <mat-icon>help</mat-icon>
     </button>
   </div>

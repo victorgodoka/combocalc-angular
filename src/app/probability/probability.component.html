@@ -5,7 +5,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             Decklist <button type="button" mat-icon-button
-              matTooltip="Adding or removing cards after you put a combo might bug it, before you do any changes. Please, do it carefully.">
+              matTooltipPosition="right" matTooltip="Adding or removing cards after you put a combo might bug it, before you do any changes. Please, do it carefully.">
               <mat-icon>help</mat-icon>
             </button>
           </mat-panel-title>
@@ -76,9 +76,11 @@
         <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
         <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
           Link</button>
-        <h1 *ngIf="fullProbability >= 0">
+        <button mat-button (click)="reset()" mat-raised-button mat-primary class="reset">Reset</button>
+
+        <h1 *ngIf="fullProbability >= 0" class="form-title">
           <span>Total probability: {{ fullProbability | percent: "1.2-2" }}</span>
-          <button type="button" mat-icon-button matTooltip="This is sum of all the individual probabilities of each combo. This means the probability of
+          <button type="button" mat-icon-button matTooltipPosition="right" matTooltip="This is sum of all the individual probabilities of each combo. This means the probability of
             drawing any of the combos in your opening hand. Remember that each combo must be unique for this number to
             be accurate.">
             <mat-icon>help</mat-icon>
@@ -95,6 +97,11 @@
             <input type="number" value="5" min="5" max="6" matInput [(ngModel)]="handSize"
               [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
+
+          <button type="button" mat-icon-button matTooltipPosition="right"
+            matTooltip="Usually 5 for the first turn and 6 for the second turn. However, this can also be used to select the number of cards sampled. For example, to calculate the probability of banishing all 3 copies of the same card when using Pot of Desires, the sampling size is 10 because 10 cards are being banished.">
+            <mat-icon>help</mat-icon>
+          </button>
         </div>
         <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [handSize]="handSize" [indexForm]="i"
           [deckData]="deckData"

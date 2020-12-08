@@ -13,7 +13,7 @@ import { DataResolver } from './data.resolver';
         resolve: { data: DataResolver },
         path: 'share/:shareID',
       },
-    ]),
+    ], { useHash: true }),
   ],
   exports: [RouterModule],
 })
