@@ -30,6 +30,9 @@ export class ComboComponent implements OnChanges {
   public readonly indexForm: any;
 
   @Input()
+  public readonly handSize: any;
+
+  @Input()
   public readonly form = this.fb.group({});
 
   @Input()
@@ -62,9 +65,9 @@ export class ComboComponent implements OnChanges {
   );
   public readonly probability = this.formValue$.pipe(
     startWith(0),
-    map(({ searchers, cards, handSize }: ComboForm) => {
+    map(({ searchers, cards }: ComboForm) => {
       try {
-        return comboCalc(searchers, cards, handSize, this.deckData.length);
+        return comboCalc(searchers, cards, this.handSize, this.deckData.length);
       } catch {
         return 0;
       }

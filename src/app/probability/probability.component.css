@@ -164,7 +164,7 @@ mat-form-field~mat-form-field {
 
 .first-group {
   color: #fff;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.85);
   padding: 20px 20px 10px 20px;
   margin: 20px 0;
   border-radius: 20px 0;

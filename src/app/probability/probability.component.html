@@ -96,7 +96,8 @@
               [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
         </div>
-        <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [indexForm]="i" [deckData]="deckData"
+        <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [handSize]="handSize" [indexForm]="i"
+          [deckData]="deckData"
           [form]="form">
         </app-combo>
       </form>

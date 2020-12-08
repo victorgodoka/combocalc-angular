@@ -35,6 +35,7 @@ export class ProbabilityComponent implements AfterViewInit {
   public fullDeckList: any;
   public formatExports: any;
   public fullProbability: number;
+  public handSize: number = 5;
 
   public readonly dynamicForm = this.fb.array([]);
 
@@ -56,7 +57,8 @@ export class ProbabilityComponent implements AfterViewInit {
     const form = this.dynamicForm.value
     const fullDeckList = this.fullDeckList
     const formatExports = this.formatExports
-    this.share.saveShare(id, { deckList, form, fullDeckList, formatExports })
+    const handSize = this.handSize
+    this.share.saveShare(id, { deckList, form, fullDeckList, formatExports, handSize })
     alert("Link copied to clipboard!")
   }
 
@@ -79,8 +81,7 @@ export class ProbabilityComponent implements AfterViewInit {
     this.dynamicForm.push(
       this.fb.group({
         cards: this.fb.array(cards ?? []),
-        searchers: this.fb.array(searchers ?? []),
-        handSize: [combo?.handSize ?? 5],
+        searchers: this.fb.array(searchers ?? [])
       })
     );
   }
@@ -96,12 +97,13 @@ export class ProbabilityComponent implements AfterViewInit {
     this.shareLink = location.origin + "/share/" + this.route.snapshot.params['shareID']
     this.route.data.subscribe(({ data }) => {
       if (data) {
-        const { deckList, form, fullDeckList, formatExports } = data as ProbabilityData;
+        const { deckList, form, fullDeckList, formatExports, handSize } = data as ProbabilityData;
 
         setTimeout(() => {
           this.deckData$.next(deckList);
           this.fullDeckList = fullDeckList;
           this.formatExports = formatExports;
+          this.handSize = handSize;
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           form.forEach((combo) => this.addCombo(combo));
         });
