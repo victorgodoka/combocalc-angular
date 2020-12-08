@@ -161,6 +161,7 @@ mat-form-field~mat-form-field {
   display: flex;
 }
 
+.first-group .mat-icon-button,
 .first-group .mat-form-field {
   color: #000;
 }

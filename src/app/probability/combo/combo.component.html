@@ -14,7 +14,7 @@
     *ngFor="let group of cardGroups; let i = index"
     [formGroup]="group"
   >
-    <mat-form-field class="name_input">
+  <mat-form-field class="name_input">
       <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
       <mat-select [selectionChange]="changeMax(e, group)" disableOptionCentering formControlName="names" multiple>
         <mat-option
@@ -45,6 +45,12 @@
       </mat-select>
     </mat-form-field>
 
+    
+    <button type="button" mat-icon-button
+      matTooltipPosition="right" matTooltip="The minimum number of copies from this card group. This means you want at least this number in your hand.">
+      <mat-icon>help</mat-icon>
+    </button>
+
     <mat-form-field class="number_input small-field">
       <mat-label>Max</mat-label>
       <mat-select formControlName="maxDesired">
@@ -55,6 +61,13 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    
+    <button type="button" mat-icon-button
+      matTooltipPosition="right" matTooltip="The maximum number of copies from this card group you want in your hand. This means you want no more than this number in your hand. Note you can also set this to 0 if you don't want any copies of this card group in your hand.">
+      <mat-icon>help</mat-icon>
+    </button>
+
   </div>
 
   <button mat-raised-button mat-primary type="button" mat-icon-button (click)="addCard()">

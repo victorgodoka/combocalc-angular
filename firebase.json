@@ -10,7 +10,7 @@
     },
     {
       "target": "calculator-proj",
-      "public": "dist/calculator-proj",
+      "public": "dist",
       "ignore": [
         "**/.*"
       ],

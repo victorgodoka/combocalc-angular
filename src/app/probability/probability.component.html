@@ -94,7 +94,8 @@
 
           <mat-form-field class="small-field">
             <mat-label>Hand Size</mat-label>
-            <input type="number" value="5" min="5" max="6" matInput [(ngModel)]="handSize"
+            <input type="number" value="5" (input)="checkMax($event)" (keypress)="disableNaN($event)" matInput
+              [(ngModel)]="handSize"
               [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
 
@@ -105,6 +106,7 @@
         </div>
         <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [handSize]="handSize" [indexForm]="i"
           [deckData]="deckData"
+          (onProbability)="sumAll($event)"
           [form]="form">
         </app-combo>
       </form>

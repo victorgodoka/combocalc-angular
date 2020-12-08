@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProbabilityData, SharingService } from '../sharing.service';
 import { ComboForm } from './combo/combo.component';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DecklistDialogComponent } from './decklist-dialog/decklist-dialog.component';
 
@@ -34,8 +34,9 @@ export class ProbabilityComponent implements AfterViewInit {
   public deckTextList: string = "";
   public fullDeckList: any;
   public formatExports: any;
-  public fullProbability: number;
   public handSize: number = 5;
+  public allProb: number[] = [];
+  public fullProbability: any = 0;
 
   public readonly dynamicForm = this.fb.array([]);
 
@@ -46,7 +47,7 @@ export class ProbabilityComponent implements AfterViewInit {
     selBox.style.left = '0';
     selBox.style.top = '0';
     selBox.style.opacity = '0';
-    this.shareLink = location.origin + "/share/" + id
+    this.shareLink = location.origin + "/#/share/" + id
     selBox.value = this.shareLink;
     document.body.appendChild(selBox);
     selBox.focus();
@@ -86,12 +87,10 @@ export class ProbabilityComponent implements AfterViewInit {
     );
   }
 
-  public probabilitySubscriber = this.dynamicForm.valueChanges.subscribe(() => {
-    setTimeout(() => {
-      let _sum = (Array.from(this.elem.nativeElement.querySelectorAll("[data-probability]")).reduce((a: any, e: any) => parseFloat(e.outerText.replace("%", "")) + a, 0) as number) / 100
-      this.fullProbability = Math.min(_sum, 1)
-    });
-  })
+  public sumAll($event: any): void {
+    this.allProb[$event.index] = $event.value
+    this.fullProbability = Math.min(this.allProb.reduce((b, a) => a + b, 0), 1)
+  }
 
   public ngAfterViewInit(): void {
     this.shareLink = location.origin + "/share/" + this.route.snapshot.params['shareID']
@@ -103,7 +102,7 @@ export class ProbabilityComponent implements AfterViewInit {
           this.deckData$.next(deckList);
           this.fullDeckList = fullDeckList;
           this.formatExports = formatExports;
-          this.handSize = handSize;
+          this.handSize = Math.min(handSize, deckList.length);
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           form.forEach((combo) => this.addCombo(combo));
         });
@@ -116,6 +115,20 @@ export class ProbabilityComponent implements AfterViewInit {
       this.router.navigate(['/']);
     } else {
       location.reload();
+    }
+  }
+
+  public disableNaN(evt) {
+    if (evt.which < 48 || evt.which > 57) {
+      evt.preventDefault();
+    }
+  }
+
+  public checkMax ($event) {
+    if (+$event.target.value >= this.deckData$.value.length) {
+      $event.target.value = this.deckData$.value.length
+    } else if (+$event.target.value <= 0) {
+      $event.target.value = 0;
     }
   }
 

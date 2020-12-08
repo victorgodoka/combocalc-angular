@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 
 import { Subscription, BehaviorSubject } from 'rxjs';
-import { map, startWith, shareReplay, switchMap } from 'rxjs/operators';
+import { map, startWith, shareReplay, switchMap, first } from 'rxjs/operators';
 
 
 import { Card } from '../../card.interface';
@@ -38,6 +38,8 @@ export class ComboComponent implements OnChanges {
   @Input()
   public readonly deckData: Card[] = [];
 
+  @Output() onProbability: EventEmitter<any> = new EventEmitter<any>();
+
   public get cards(): FormArray {
     return this.form.controls.cards as FormArray;
   }
@@ -60,14 +62,17 @@ export class ComboComponent implements OnChanges {
 
   public form$ = new BehaviorSubject(this.form);
   public formValue$ = this.form$.pipe(
-    switchMap((form) => form.valueChanges.pipe(startWith(form.value))),
+    switchMap((form) => form?.valueChanges.pipe(startWith(form.value))),
     shareReplay(1)
   );
   public readonly probability = this.formValue$.pipe(
     startWith(0),
     map(({ searchers, cards }: ComboForm) => {
       try {
-        return comboCalc(searchers, cards, this.handSize, this.deckData.length);
+        let _calc = comboCalc(searchers, cards, this.handSize, this.deckData.length);
+        let ev = { value: _calc, index: this.indexForm }
+        this.onProbability.emit(ev)
+        return _calc
       } catch {
         return 0;
       }
@@ -88,12 +93,16 @@ export class ComboComponent implements OnChanges {
     })
   );
 
-  public changeMax (e, group) {
+  public changeMax(e, group) {
     group.controls.maxDesired.value = group.controls.names.value.length
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    this.form$.next(changes.form.currentValue);
+    if (changes?.form) {
+      this.form$.next(changes.form.currentValue);
+    } else {
+      this.form$.next(this.form);
+    }
   }
 
   public addCard(): void {
