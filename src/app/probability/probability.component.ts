@@ -333,6 +333,6 @@ export class ProbabilityComponent implements AfterViewInit {
       })
       .finally(() => this.isLoading = false)
     ))
-    this.fullPrice = (await allPrices).reduce((a, b) => a + b.average, 0)
+    this.fullPrice = (await allPrices).reduce((a:any, b:any) => a + b.average, 0)
   }
 }
