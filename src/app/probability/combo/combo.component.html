@@ -98,8 +98,8 @@
           *ngFor="let card of cardsWithFormInfo | async; let index = index"
           [value]="card.name + index"
           [disabled]="
-            card.searchGroupID &&
-            card.searchGroupID !== group.controls.id.value
+            card.groupID && 
+            card.groupID !== group.controls.id.value
           "
         >
           <span class="text-option">{{ card.name }}</span>
