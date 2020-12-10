@@ -4,13 +4,18 @@
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Decklist <button type="button" mat-icon-button
-              matTooltipPosition="right" matTooltip="Adding or removing cards after you put a combo might bug it, before you do any changes. Please, do it carefully.">
-              <mat-icon>help</mat-icon>
-            </button>
+            Decklist 
           </mat-panel-title>
-          <mat-panel-description>
-            {{ deckName }}
+          <mat-panel-description class="description">
+            <p class="deckname">{{ deckName }}</p>
+            <div class="deck-average">
+              <span *ngIf="fullPrice > 0 && !this.isLoading">{{ fullPrice | currency }}</span>
+              <span *ngIf="fullPrice === 0 || this.isLoading">...</span>
+              <button type="button" mat-icon-button matTooltipPosition="right"
+                matTooltip="average deckprice in USD via yugiohprices.com">
+                <mat-icon>help</mat-icon>
+              </button>
+            </div>  
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="decklist" *ngIf="fullDeckList">
@@ -94,9 +99,14 @@
 
           <mat-form-field class="small-field">
             <mat-label>Hand Size</mat-label>
-            <input type="number" value="5" (input)="checkMax($event)" (keypress)="disableNaN($event)" matInput
-              [(ngModel)]="handSize"
-              [ngModelOptions]="{standalone: true}" />
+            <mat-select [(ngModel)]="handSize" [ngModelOptions]="{standalone: true}">
+              <mat-option [value]="0">0</mat-option>
+              <mat-option [disabled]="i+1 > deckData?.length"
+                *ngFor="let c of [].constructor(Math.min(deckData?.length, 10)); let i = index"
+                [value]="i+1">
+                {{i+1}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <button type="button" mat-icon-button matTooltipPosition="right"

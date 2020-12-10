@@ -176,6 +176,15 @@ mat-form-field~mat-form-field {
   align-items: end;
 }
 
+.description {
+  justify-content: space-between;
+}
+
+.deck-average {
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 1024px) {
   .export-area button+button {
     margin-left: 10px;

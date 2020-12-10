@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Ou
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 
 import { Subscription, BehaviorSubject } from 'rxjs';
-import { map, startWith, shareReplay, switchMap, first } from 'rxjs/operators';
+import { map, startWith, shareReplay, switchMap, first, tap } from 'rxjs/operators';
 
 
 import { Card } from '../../card.interface';
@@ -24,8 +24,6 @@ export interface ComboForm {
 export class ComboComponent implements OnChanges {
   constructor(private readonly fb: FormBuilder) { }
 
-  private readonly subscriptions = new Subscription();
-
   @Input()
   public readonly indexForm: any;
 
@@ -37,8 +35,10 @@ export class ComboComponent implements OnChanges {
 
   @Input()
   public readonly deckData: Card[] = [];
+  public deleteThis: boolean = false
 
   @Output() onProbability: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onRemoval: EventEmitter<any> = new EventEmitter<any>();
 
   public get cards(): FormArray {
     return this.form.controls.cards as FormArray;
@@ -70,12 +70,16 @@ export class ComboComponent implements OnChanges {
     map(({ searchers, cards }: ComboForm) => {
       try {
         let _calc = comboCalc(searchers, cards, this.handSize, this.deckData.length);
-        let ev = { value: _calc, index: this.indexForm }
-        this.onProbability.emit(ev)
         return _calc
       } catch {
         return 0;
       }
+    }),
+    tap(_calc => {
+      setTimeout(() => {
+        let ev = { value: _calc, index: this.indexForm, delete: this.deleteThis }
+        this.onProbability.emit(ev)
+      }, 1)
     })
   );
 
@@ -84,23 +88,24 @@ export class ComboComponent implements OnChanges {
       return this.deckData.map((card, i) => ({
         ...card,
         groupID: form.cards.find(({ names }) =>
-          names.some?.((name) => name === `${card.name}${i}`)
+          names?.some?.((name) => name === `${card.name}${i}`)
         )?.id as string | undefined,
         searchGroupID: form.searchers.find(({ names }) =>
-          names.some?.((name) => name === `${card.name}${i}`)
+          names?.some?.((name) => name === `${card.name}${i}`)
         )?.id as string | undefined,
       }));
     })
   );
 
   public changeMax(e, group) {
-    group.controls.maxDesired.value = group.controls.names.value.length
+    group.controls.maxDesired.value = group.controls.names.value?.length || 0
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
+    console.log('c', changes)
     if (changes?.form) {
       this.form$.next(changes.form.currentValue);
-    } else {
+    } else if (changes.form) {
       this.form$.next(this.form);
     }
   }
@@ -120,6 +125,14 @@ export class ComboComponent implements OnChanges {
     this.cards.removeAt(this.cards.length - 1);
   }
 
+  public deleteForm($event): void {
+    $event.stopPropagation();
+    this.deleteThis = true;
+    this.form.reset()
+    // this.onRemoval.emit(this.indexForm)
+
+  }
+
   public addSearcher(): void {
     this.searchers.push(
       this.fb.group({
@@ -131,6 +144,6 @@ export class ComboComponent implements OnChanges {
   }
 
   public removeSearcher(): void {
-    this.searchers.removeAt(this.cards.length - 1);
+    this.searchers.removeAt(this.searchers.length - 1);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, pipe, Subscription } from 'rxjs';
 import { Card } from '../card.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProbabilityData, SharingService } from '../sharing.service';
@@ -8,6 +8,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DecklistDialogComponent } from './decklist-dialog/decklist-dialog.component';
+import { shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './probability.component.html',
@@ -22,9 +23,12 @@ export class ProbabilityComponent implements AfterViewInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     public readonly decklistTextDialog: MatDialog
-  ) { }
+  ) {
+    this.Math = Math;
+  }
 
   public file: any;
+  Math: any;
   public readonly deckData$ = new BehaviorSubject<Card[]>([]);
   public readonly autoCompleteCards$ = new BehaviorSubject<Card[]>([]);
   public selectedCard: string;
@@ -32,11 +36,13 @@ export class ProbabilityComponent implements AfterViewInit {
   public deckName: string = "";
   public shareLink: string = "";
   public deckTextList: string = "";
-  public fullDeckList: any;
+  public fullDeckList: any = "";
   public formatExports: any;
   public handSize: number = 5;
   public allProb: number[] = [];
   public fullProbability: any = 0;
+  public fullPrice: any = 0;
+  public isLoading: boolean = false;
 
   public readonly dynamicForm = this.fb.array([]);
 
@@ -88,8 +94,14 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public sumAll($event: any): void {
+    console.log($event)
     this.allProb[$event.index] = $event.value
     this.fullProbability = Math.min(this.allProb.reduce((b, a) => a + b, 0), 1)
+    if ($event.delete) {
+      this.allProb.splice($event.index, 1)
+      this.fullProbability = Math.min(this.allProb.reduce((b, a) => a + b, 0), 1)
+      this.dynamicForm.removeAt($event.index)
+    }
   }
 
   public ngAfterViewInit(): void {
@@ -100,8 +112,8 @@ export class ProbabilityComponent implements AfterViewInit {
 
         setTimeout(() => {
           this.deckData$.next(deckList);
-          this.fullDeckList = fullDeckList;
           this.formatExports = formatExports;
+          this.changeDecklist(fullDeckList)
           this.handSize = Math.min(handSize, deckList.length);
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           form.forEach((combo) => this.addCombo(combo));
@@ -124,7 +136,7 @@ export class ProbabilityComponent implements AfterViewInit {
     }
   }
 
-  public checkMax ($event) {
+  public checkMax($event) {
     if (+$event.target.value >= this.deckData$.value.length) {
       $event.target.value = this.deckData$.value.length
     } else if (+$event.target.value <= 0) {
@@ -149,8 +161,8 @@ export class ProbabilityComponent implements AfterViewInit {
       )
         .then((res) => res.json())
         .then(({ data }) => {
-          this.fullDeckList = JSON.parse(data.formats.json)
           this.formatExports = data.formats;
+          this.changeDecklist(JSON.parse(data.formats.json))
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
         });
       this.readDeck(idDeck);
@@ -177,7 +189,7 @@ export class ProbabilityComponent implements AfterViewInit {
       )
         .then((res) => res.json())
         .then(({ data }) => {
-          this.fullDeckList = JSON.parse(data.formats.json);
+          this.changeDecklist(JSON.parse(data.formats.json))
           this.formatExports = data.formats;
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           this.readDeck(JSON.parse(data.formats.json).main);
@@ -202,7 +214,7 @@ export class ProbabilityComponent implements AfterViewInit {
         )
           .then((res) => res.json())
           .then(({ data }) => {
-            this.fullDeckList = JSON.parse(data.formats.json);
+            this.changeDecklist(JSON.parse(data.formats.json))
             this.formatExports = data.formats;
             this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
             this.readDeck(JSON.parse(data.formats.json).main);
@@ -241,7 +253,9 @@ export class ProbabilityComponent implements AfterViewInit {
     let _fullDeckListIdx = this.fullDeckList[deck].indexOf(cardID);
     let _deckDataIdx = this.deckData$.value.findIndex(c => c.id === cardID)
     if (_fullDeckListIdx > -1) {
-      this.fullDeckList[deck].splice(_fullDeckListIdx, 1);
+      let _data = this.fullDeckList;
+      _data[deck].splice(_fullDeckListIdx, 1);
+      this.changeDecklist(_data)
     }
     if (_deckDataIdx > -1) {
       let _temp = this.deckData$.value
@@ -250,7 +264,7 @@ export class ProbabilityComponent implements AfterViewInit {
     }
   }
 
-  public getLimitations (cardData: Card, deck: string) : boolean {
+  public getLimitations(cardData: Card, deck: string): boolean {
     let result = true
 
     if (deck === 'main' && this.fullDeckList[deck].length >= 60) {
@@ -278,8 +292,10 @@ export class ProbabilityComponent implements AfterViewInit {
         .then(({ data }) => {
           let cardData: Card = data[0]
           let deck = (cardData.type.includes("Link") || cardData.type.includes("Synchro") || cardData.type.includes("Fusion") || cardData.type.includes("XYZ")) ? "extra" : "main"
-          if (this.getLimitations (cardData, deck)) {
-            this.fullDeckList[deck].push(cardData.id);
+          if (this.getLimitations(cardData, deck)) {
+            let _data = this.fullDeckList
+            _data[deck].push(cardData.id)
+            this.changeDecklist(_data)
             let _temp = this.deckData$.value
             _temp.push(cardData)
             this.deckData$.next(_temp)
@@ -289,7 +305,7 @@ export class ProbabilityComponent implements AfterViewInit {
     }
   }
 
-  public searchForCards () {
+  public searchForCards() {
     if (this.selectedCard.length > 3) {
       fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${this.selectedCard}`)
         .then(res => res.json())
@@ -300,4 +316,25 @@ export class ProbabilityComponent implements AfterViewInit {
     }
   }
 
-} 
+  public async changeDecklist(deck) {
+    this.isLoading = true
+    this.fullDeckList = deck;
+    let ids = deck?.main.concat(deck?.extra).concat(deck?.side)
+
+    let names = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${ids.join(",")}`)
+      .then(res => res.json())
+      .then(({ data }) => data)
+
+    let allNames = ids.map(id => names.find(card => card.id === id)).map(c => { return { id: c.id, name: c.name } })
+    let allPrices = Promise.all(allNames.map(card => fetch(`http://yugiohprices.com/api/get_card_prices/${encodeURIComponent(card.name)}`)
+      .then(res => res.json())
+      .then(({ data }) => {
+        if (!data) return { id: card.id, name: card.name, average: 0 }
+        let price = data.map(price => price.price_data.data?.prices.average || 0)
+        return { id: card.id, name: card.name, average: Math.min(...price) || 0 }
+      })
+      .finally(() => this.isLoading = false)
+    ))
+    this.fullPrice = (await allPrices).reduce((a, b) => a + b.average, 0)
+  }
+}

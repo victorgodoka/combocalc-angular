@@ -1,5 +1,7 @@
 <h4 class="right">Combo {{ indexForm + 1 }}</h4>
 <form class="combo-form" [formGroup]="form">
+  <mat-icon aria-hidden="false" aria-label="delete icon" class="delete-icon" (click)="deleteForm($event)">delete
+  </mat-icon>
   <div>
     <h2>Probability <span data-probability>{{ probability | async | percent: "1.2-2" }}</span></h2>
   </div>
