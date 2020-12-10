@@ -39,7 +39,6 @@ export class SharingService {
 
   public saveShare(docID: string, data: ProbabilityData): void {
     const encoded = this.encode(data);
-    console.log("aaa", docID, data)
     this.fireStore.doc<ShareDoc>(`shares/${docID}`).set({ encoded });
   }
 }

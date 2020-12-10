@@ -94,7 +94,6 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public sumAll($event: any): void {
-    console.log($event)
     this.allProb[$event.index] = $event.value
     this.fullProbability = Math.min(this.allProb.reduce((b, a) => a + b, 0), 1)
     if ($event.delete) {
@@ -225,7 +224,6 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public dyanmicDownloadByHtmlTag(input: string, format: string) {
     const text = this.formatExports[input]
-    console.log(this.formatExports, text)
     const element = { dynamicDownload: null as HTMLElement }
     element.dynamicDownload = document.createElement('a');
     element.dynamicDownload.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);

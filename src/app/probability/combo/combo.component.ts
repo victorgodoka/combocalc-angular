@@ -102,7 +102,6 @@ export class ComboComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    console.log('c', changes)
     if (changes?.form) {
       this.form$.next(changes.form.currentValue);
     } else if (changes.form) {
