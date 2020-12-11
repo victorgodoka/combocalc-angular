@@ -42,6 +42,8 @@ export class ProbabilityComponent implements AfterViewInit {
   public allProb: number[] = [];
   public fullProbability: any = 0;
   public fullPrice: any = 0;
+  public _currentShuffled: any = 0;
+  public _hand: any = 0;
   public isLoading: boolean = false;
 
   public readonly dynamicForm = this.fb.array([]);
@@ -53,7 +55,7 @@ export class ProbabilityComponent implements AfterViewInit {
     selBox.style.left = '0';
     selBox.style.top = '0';
     selBox.style.opacity = '0';
-    this.shareLink = location.origin + "/#/share/" + id
+    this.shareLink = location.origin + "/combo/#/share/" + id
     selBox.value = this.shareLink;
     document.body.appendChild(selBox);
     selBox.focus();
@@ -104,7 +106,7 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.shareLink = location.origin + "/share/" + this.route.snapshot.params['shareID']
+    this.shareLink = location.origin + "/combo/#/share/" + this.route.snapshot.params['shareID']
     this.route.data.subscribe(({ data }) => {
       if (data) {
         const { deckList, form, fullDeckList, formatExports, handSize } = data as ProbabilityData;
@@ -181,7 +183,7 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public importOmega(): void {
-    this.omega = prompt('Insert Omega Code here.');
+    this.omega = prompt('Insert Omega or YDKe Code here.');
     if (this.omega) {
       fetch(
         `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
@@ -323,16 +325,50 @@ export class ProbabilityComponent implements AfterViewInit {
       .then(res => res.json())
       .then(({ data }) => data)
 
-    let allNames = ids.map(id => names.find(card => card.id === id)).map(c => { return { id: c.id, name: c.name } })
-    let allPrices = Promise.all(allNames.map(card => fetch(`http://yugiohprices.com/api/get_card_prices/${encodeURIComponent(card.name)}`)
-      .then(res => res.json())
-      .then(({ data }) => {
-        if (!data) return { id: card.id, name: card.name, average: 0 }
-        let price = data.map(price => price.price_data.data?.prices.average || 0)
-        return { id: card.id, name: card.name, average: Math.min(...price) || 0 }
-      })
-      .finally(() => this.isLoading = false)
-    ))
-    this.fullPrice = (await allPrices).reduce((a:any, b:any) => a + b.average, 0)
+    let allCards = ids.map(id => names.find(card => card.id === id))
+    let allPrices = allCards.map(card => card?.card_prices[0] || {
+      cardmarket_price: 0,
+      tcgplayer_price: 0,
+      ebay_price: 0,
+      amazon_price: 0,
+      coolstuffinc_price: 0
+    })
+
+    this.fullPrice = allPrices.reduce((a: any, b: any) => {
+      return {
+        cardmarket_price: parseFloat(b.cardmarket_price) + parseFloat(a.cardmarket_price),
+        tcgplayer_price: parseFloat(b.tcgplayer_price) + parseFloat(a.tcgplayer_price),
+        ebay_price: parseFloat(b.ebay_price) + parseFloat(a.ebay_price),
+        amazon_price: parseFloat(b.amazon_price) + parseFloat(a.amazon_price),
+        coolstuffinc_price: parseFloat(b.coolstuffinc_price) + parseFloat(a.coolstuffinc_price),
+      }
+    })
+  }
+
+  public getHand() {
+    const shuffle = (array) => {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+    this._currentShuffled = shuffle(this.fullDeckList.main)
+    this._hand = this._currentShuffled.slice(0, this.handSize)
+  }
+
+  public drawOne() {
+    this._hand = [...this._hand, this._currentShuffled[this._hand.length]]
   }
 }

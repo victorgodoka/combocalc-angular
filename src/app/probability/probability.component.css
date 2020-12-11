@@ -11,7 +11,7 @@
 .form {
   margin: 0 auto;
   max-width: 1024px;
-  widows: 100%;
+  width: 100%;
   padding: 20px;
   color: #fff;
   min-height: 100%;
@@ -148,6 +148,7 @@ mat-form-field~mat-form-field {
 
 .full-width {
   width: 100%;
+  padding: 0 20px;
 }
 
 .reset {
@@ -180,9 +181,51 @@ mat-form-field~mat-form-field {
   justify-content: space-between;
 }
 
-.deck-average {
+.deck-prices {
+  padding: 20px;
+  margin-bottom: 20px;
+  list-style: none;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: rgba(30, 0, 139, 0.418);
+}
+
+.handtesting {
+  padding: 10px 20px;
+}
+
+.handtesting {
+  
+}
+
+.handtesing__header {
+  margin-bottom: 10px;
+}
+
+.handtesting__hand {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.handtesting__hand img {
+  width: 100%;
+}
+
+.gethand {
+  margin-right: 10px;
+}
+
+.gethand {
+  background-color: rgb(44, 44, 44);
+  color: #fafafa;
+}
+
+.drawone {
+  background-color: rgb(46, 74, 116);
+  color: #fafafa;
 }
 
 @media (min-width: 1024px) {
@@ -190,6 +233,7 @@ mat-form-field~mat-form-field {
     margin-left: 10px;
   }
 
+  .handtesting__hand,
   .decklist .grid {
     grid-template-columns: repeat(10, 1fr);
   }

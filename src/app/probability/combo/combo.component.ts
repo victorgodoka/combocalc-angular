@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Ou
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 
 import { Subscription, BehaviorSubject } from 'rxjs';
-import { map, startWith, shareReplay, switchMap, first, tap } from 'rxjs/operators';
+import { map, startWith, shareReplay, switchMap, first, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 import { Card } from '../../card.interface';
@@ -69,8 +69,7 @@ export class ComboComponent implements OnChanges {
     startWith(0),
     map(({ searchers, cards }: ComboForm) => {
       try {
-        let _calc = comboCalc(searchers, cards, this.handSize, this.deckData.length);
-        return _calc
+        return comboCalc(searchers, cards, this.handSize, this.deckData.length);
       } catch {
         return 0;
       }
@@ -97,10 +96,6 @@ export class ComboComponent implements OnChanges {
     })
   );
 
-  public changeMax(e, group) {
-    group.controls.maxDesired.value = group.controls.names.value?.length || 0
-  }
-
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes?.form) {
       this.form$.next(changes.form.currentValue);
@@ -122,6 +117,21 @@ export class ComboComponent implements OnChanges {
 
   public removeCard(): void {
     this.cards.removeAt(this.cards.length - 1);
+  }
+
+  public changeMax($event) {
+    console.log($event)
+    let arr = this.form.controls.cards.value
+    let temp = []
+    arr.forEach((_temp, _i) => {
+      temp[_i] = {
+        id: _temp.id,
+        names: _temp.names,
+        minDesired: _temp?.names.length >= 1 ? Math.max(1, _temp.minDesired) : _temp.minDesired,
+        maxDesired: Math.max(_temp?.names.length, _temp?.maxDesired)
+      }
+    });
+    this.form.controls.cards.setValue(temp)
   }
 
   public deleteForm($event): void {

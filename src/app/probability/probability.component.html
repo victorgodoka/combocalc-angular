@@ -8,17 +8,16 @@
           </mat-panel-title>
           <mat-panel-description class="description">
             <p class="deckname">{{ deckName }}</p>
-            <div class="deck-average">
-              <span *ngIf="fullPrice > 0 && !this.isLoading">{{ fullPrice | currency }}</span>
-              <span *ngIf="fullPrice === 0 || this.isLoading">...</span>
-              <button type="button" mat-icon-button matTooltipPosition="right"
-                matTooltip="average deckprice in USD via yugiohprices.com">
-                <mat-icon>help</mat-icon>
-              </button>
-            </div>  
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="decklist" *ngIf="fullDeckList">
+          <ul *ngIf="fullPrice" class="deck-prices">
+            <li><b>Card Market</b>: {{ fullPrice?.cardmarket_price | currency: 'EUR' }}</li>
+            <li><b>TCG Player</b>: {{ fullPrice?.tcgplayer_price | currency: 'USD' }}</li>
+            <li><b>eBay</b>: {{ fullPrice?.ebay_price | currency: 'USD' }}</li>
+            <li><b>Amazon</b>: {{ fullPrice?.amazon_price | currency: 'USD' }}</li>
+            <li><b>Cool Stuff Inc.</b>: {{ fullPrice?.coolstuffinc_price | currency: 'USD' }}</li>
+          </ul>
           <mat-form-field class="full-width">
             <input type="text" (input)="searchForCards()" placeholder="Select a card to add into your deck"
               aria-label="Number" matInput [(ngModel)]="selectedCard" [matAutocomplete]="auto">
@@ -32,29 +31,45 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-          <h3>main</h3>
-          <div class="grid">
+          <h3 class="full-width">main</h3>
+          <div class="grid full-width">
             <div class="grid__image" *ngFor="let card of fullDeckList.main; let index = index">
               <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('main', index, card)">delete
               </mat-icon>
               <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
             </div>
           </div>
-          <h3>extra</h3>
-          <div class="grid">
+          <h3 class="full-width">extra</h3>
+          <div class="grid full-width">
             <div class="grid__image" *ngFor="let card of fullDeckList.extra; let index = index">
               <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('extra', index, card)">delete
               </mat-icon>
               <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
             </div>
           </div>
-          <h3>side</h3>
-          <div class="grid">
+          <h3 class="full-width">side</h3>
+          <div class="grid full-width">
             <div class="grid__image" *ngFor="let card of fullDeckList.side; let index = index">
               <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('side', index, card)">delete
               </mat-icon>
               <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
             </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Hand Testing  
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="handtesting" *ngIf="fullDeckList">
+          <div class="handtesing__header">
+            <button (click)="getHand()" type="button" mat-raised-button mat-primary class="gethand">Get Sample Hand</button>
+            <button [disabled]="_hand.length >= deckData.length" (click)="drawOne()" type="button" mat-raised-button mat-primary class="drawone">Draw +1</button>
+          </div>
+          <div class="handtesting__hand">
+            <img *ngFor="let id of _hand" src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ id }}.jpg" />
           </div>
         </div>
       </mat-expansion-panel>
@@ -135,7 +150,7 @@
         <mat-icon>cloud_upload</mat-icon> Import .ydk
       </label>
       <button (click)="importOmega()" mat-raised-button mat-primary>
-        <mat-icon>code</mat-icon> Import Omega code
+        <mat-icon>code</mat-icon> Import Omega/YDKe code
       </button>
       <button (click)="importText()" mat-raised-button mat-primary>
         <mat-icon>code</mat-icon> Import Decklist
