@@ -125,9 +125,10 @@
         multiple
       >
         <mat-option
-          *ngFor="let cardName of cardGroups; let value = index"
-          [value]="value"
-          >Card Group {{ value + 1 }}
+          *ngFor="let cardName of cardGroups; let i = index"
+          [disabled]="form.controls.cards.value[i].minDesired <= 0"
+          [value]="i"
+          >Card Group {{ i + 1 }}
         </mat-option>
       </mat-select>
     </mat-form-field>
