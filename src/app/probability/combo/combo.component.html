@@ -57,10 +57,12 @@
     </button>
 
     <mat-form-field class="number_input small-field">
-      <mat-label>Max</mat-label>
+      <mat-label>Max {{group.controls.minDesired.value}}</mat-label>
       <mat-select formControlName="maxDesired">
-        <mat-option [value]="0">0</mat-option>
         <mat-option 
+          [disabled]="group.controls.minDesired.value > 0" [value]="0">0</mat-option>
+        <mat-option 
+          [disabled]="group.controls.minDesired.value > (i+1)" 
           *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
           {{i+1}}
         </mat-option>

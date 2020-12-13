@@ -111,8 +111,8 @@ export class ProbabilityComponent implements AfterViewInit {
       this.importOmega(omega)
     }
     this.route.data.subscribe(({ data }) => {
-      this.isLoading = true;
       if (data) {
+        this.isLoading = true;
         const { deckList, form, fullDeckList, formatExports, handSize } = data as ProbabilityData;
 
         setTimeout(() => {
@@ -189,9 +189,9 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public importOmega(omegaCode): void {
-    this.isLoading = true;
     this.omega = omegaCode || prompt('Insert Omega or YDKe Code here.');
     if (this.omega) {
+      this.isLoading = true;
       fetch(
         `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
       )
@@ -207,7 +207,6 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public importText(): void {
-    this.isLoading = true;
     const decklistDialog = this.decklistTextDialog.open(DecklistDialogComponent, {
       width: '100%',
       data: {
@@ -219,6 +218,7 @@ export class ProbabilityComponent implements AfterViewInit {
     decklistDialog.afterClosed().subscribe(({ deckName, decklist }) => {
       this.deckName = deckName || ""
       if (decklist) {
+        this.isLoading = true;
         fetch(
           `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(decklist)}`
         )
@@ -327,13 +327,14 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public async changeDecklist(deck) {
-    this.isLoading = true
     this.fullDeckList = deck;
     let ids = deck?.main.concat(deck?.extra).concat(deck?.side)
 
+    this.isLoading = true
     let names = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${ids.join(",")}`)
       .then(res => res.json())
       .then(({ data }) => data)
+      .finally(() => this.isLoading = false);
 
     let allCards = ids.map(id => names.find(card => card.id === id))
     let allPrices = allCards.map(card => card?.card_prices[0] || {
