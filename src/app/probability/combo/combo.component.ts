@@ -120,7 +120,6 @@ export class ComboComponent implements OnChanges {
   }
 
   public changeMax($event) {
-    console.log($event)
     let arr = this.form.controls.cards.value
     let temp = []
     arr.forEach((_temp, _i) => {

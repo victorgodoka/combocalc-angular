@@ -17,7 +17,6 @@ import { shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 export class ProbabilityComponent implements AfterViewInit {
   constructor(
     private readonly fireStore: AngularFirestore,
-    private elem: ElementRef,
     private readonly fb: FormBuilder,
     private readonly share: SharingService,
     private readonly route: ActivatedRoute,
@@ -107,7 +106,12 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     this.shareLink = location.origin + "/combo/#/share/" + this.route.snapshot.params['shareID']
+    if (this.route.snapshot.params['omegacode']) {
+      let omega = decodeURIComponent(this.route.snapshot.params['omegacode'])
+      this.importOmega(omega)
+    }
     this.route.data.subscribe(({ data }) => {
+      this.isLoading = true;
       if (data) {
         const { deckList, form, fullDeckList, formatExports, handSize } = data as ProbabilityData;
 
@@ -120,11 +124,12 @@ export class ProbabilityComponent implements AfterViewInit {
           form.forEach((combo) => this.addCombo(combo));
         });
       }
+      this.isLoading = false;
     });
   }
 
   public reset(): void {
-    if (this.route.toString().includes('share')) {
+    if (this.route.toString().includes('share') || this.route.toString().includes('omega')) {
       this.router.navigate(['/']);
     } else {
       location.reload();
@@ -182,8 +187,9 @@ export class ProbabilityComponent implements AfterViewInit {
       });
   }
 
-  public importOmega(): void {
-    this.omega = prompt('Insert Omega or YDKe Code here.');
+  public importOmega(omegaCode): void {
+    this.isLoading = true;
+    this.omega = omegaCode || prompt('Insert Omega or YDKe Code here.');
     if (this.omega) {
       fetch(
         `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
@@ -194,11 +200,13 @@ export class ProbabilityComponent implements AfterViewInit {
           this.formatExports = data.formats;
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           this.readDeck(JSON.parse(data.formats.json).main);
-        });
+        })
+        .finally(() => this.isLoading = false);
     }
   }
 
   public importText(): void {
+    this.isLoading = true;
     const decklistDialog = this.decklistTextDialog.open(DecklistDialogComponent, {
       width: '100%',
       data: {
@@ -219,7 +227,8 @@ export class ProbabilityComponent implements AfterViewInit {
             this.formatExports = data.formats;
             this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
             this.readDeck(JSON.parse(data.formats.json).main);
-          });
+          })
+          .finally(() => this.isLoading = false);
       }
     });
   }

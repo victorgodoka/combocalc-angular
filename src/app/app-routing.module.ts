@@ -13,6 +13,10 @@ import { DataResolver } from './data.resolver';
         resolve: { data: DataResolver },
         path: 'share/:shareID',
       },
+      {
+        component: ProbabilityComponent,
+        path: 'omega/:omegacode',
+      },
     ], { useHash: true }),
   ],
   exports: [RouterModule],

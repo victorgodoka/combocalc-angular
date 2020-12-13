@@ -15,6 +15,7 @@ import { AngularFireModule } from '@angular/fire';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
@@ -47,6 +48,7 @@ import { DecklistDialogComponent } from './probability/decklist-dialog/decklist-
     MatDialogModule,
     MatTableModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatExpansionModule,
     MatAutocompleteModule,
