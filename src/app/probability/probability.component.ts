@@ -122,9 +122,9 @@ export class ProbabilityComponent implements AfterViewInit {
           this.handSize = Math.min(handSize, deckList.length);
           this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           form.forEach((combo) => this.addCombo(combo));
+          this.isLoading = false;
         });
       }
-      this.isLoading = false;
     });
   }
 
@@ -184,7 +184,8 @@ export class ProbabilityComponent implements AfterViewInit {
       .then((res) => res.json())
       .then(({ data }) => {
         this.deckData$.next(deck.map((id) => data.find((c) => +c.id === +id)));
-      });
+      })
+      .finally(() => this.isLoading = false);
   }
 
   public importOmega(omegaCode): void {
