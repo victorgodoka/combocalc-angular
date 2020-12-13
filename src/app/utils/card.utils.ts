@@ -117,13 +117,13 @@ const applyAssociations = (
  * 5 card opening hand
  * 3 Card A, 2 Card B, 5 Searchers (can search for Card A or B)
  *
- * 1. 4.32% (Open with at least 1 Card A, 1 Card B, and 0 Searchers)
- * 2. 12.53% (Open with at least 1 Card A, 0 Card B, and at least 1 Searcher)
- * 3. 7.96% (Open with at least 1 Card B, 0 Card A, and at least 1 Searcher)
- * 4. 6.85% (Open with 0 Card A, 0 Card B, and at least 2 Searchers)
+ * 1. 4.32% (0 Searchers, 1 Card A, 1 Card B)
+ * 2. 12.53% (1 Searcher, 1 Card A, 0 Card B)
+ * 3. 7.96% (1 Searcher, 0 Card A, 1 Card B)
+ * 4. 6.85% (2 Searchers, 0 Card A, 0 Card B)
+ * 5: 2.49% (1 Searcher, 1 Card A, 1 Card B)
  *
- * 4.32+12.53+7.96+6.85 = 31.66% chance total
- *
+ * 4.32 + 12.53 + 7.96 + 6.85 + 2.49 = 34.15% chance total
  */
 export const comboCalc = (
   searchGroups: SearchGroup[],
@@ -131,7 +131,6 @@ export const comboCalc = (
   handSize: number,
   deckSize: number
 ) => {
-  // Case 0 - When user specifies no searchers
   if (searchGroups.map(({ names }) => names.length).reduce(toTotal, 0) === 0) {
     return hypergeom(cardCounts, handSize, deckSize);
   }
@@ -140,6 +139,12 @@ export const comboCalc = (
   for (const searchGroup of searchGroups) {
     sum += hypergeom(
       applySearchGroup(cardCounts, searchGroups),
+      handSize,
+      deckSize
+    );
+
+    sum += hypergeom(
+      applySearchGroup(cardCounts, searchGroups, 0, 1),
       handSize,
       deckSize
     );
