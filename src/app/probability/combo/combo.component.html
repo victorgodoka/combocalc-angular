@@ -7,35 +7,32 @@
   </div>
   <h2 class="form-title">
     <span>Cards</span>
-    <button type="button" mat-icon-button
-      matTooltipPosition="right" matTooltip="Select which card(s) you want in your hand as part of your combo. Each card group is unique from each other. You may select cards you do NOT want in your hand either by setting min and max to 0.">
+    <button type="button" mat-icon-button matTooltipPosition="right"
+      matTooltip="Select which card(s) you want in your hand as part of your combo. Each card group is unique from each other. You may select cards you do NOT want in your hand either by setting min and max to 0.">
       <mat-icon>help</mat-icon>
+    </button>
+
+    <button [disabled]="cardGroups.length > 0 && (!cardGroups[cardGroups.length - 1]?.value.names)" mat-raised-button
+      mat-primary type="button" mat-icon-button (click)="addCard()">
+      <mat-icon>add</mat-icon>
     </button></h2>
-  <div
-    class="form-group group-line card-group"
-    *ngFor="let group of cardGroups; let i = index"
-    [formGroup]="group"
-  >
-  <mat-form-field class="name_input">
-      <mat-label>{{ "Card Group " + (i + 1) }}</mat-label>
-      <mat-select (selectionChange)="changeMax($event)" disableOptionCentering formControlName="names" multiple>
-        <mat-option
-          *ngFor="let card of cardsWithFormInfo | async; let index = index"
-          [value]="card.name + index"
+
+  <div class="form-group group-line card-group" *ngFor="let group of cardGroups; let groupIndex = index"
+    [formGroup]="group">
+    <mat-form-field class="name_input">
+      <mat-label>{{ "Card Group " + (groupIndex + 1) }}</mat-label>
+      <mat-select (selectionChange)="changeMax(groupIndex)" disableOptionCentering formControlName="names" multiple>
+        <mat-option *ngFor="let card of cardsWithFormInfo | async; let index = index" [value]="card.name + index"
           [disabled]="
             (card.groupID && 
             card.groupID !== group.controls.id.value) ||
             (card.searchGroupID &&
             card.searchGroupID !== group.controls.id.value)
-          "
-        >
+          ">
           <span class="text-option">{{ card.name }}</span>
-          <img
-            class="image-option"
-            src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
+          <img class="image-option" src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
               card.id
-            }}.jpg"
-          />
+            }}.jpg" />
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -44,107 +41,87 @@
       <mat-label>Min</mat-label>
       <mat-select formControlName="minDesired">
         <mat-option [value]="0">0</mat-option>
-        <mat-option *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
-          {{i+1}}
+        <mat-option *ngFor="let card of (group.controls.names.value || []); let j = index" [value]="j+1">
+          {{j+1}}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    
-    <button type="button" mat-icon-button
-      matTooltipPosition="right" matTooltip="The minimum number of copies from this card group. This means you want at least this number in your hand.">
+
+    <button type="button" mat-icon-button matTooltipPosition="right"
+      matTooltip="The minimum number of copies from this card group. This means you want at least this number in your hand.">
       <mat-icon>help</mat-icon>
     </button>
 
     <mat-form-field class="number_input small-field">
-      <mat-label>Max {{group.controls.minDesired.value}}</mat-label>
+      <mat-label>Max</mat-label>
       <mat-select formControlName="maxDesired">
-        <mat-option 
-          [disabled]="group.controls.minDesired.value > 0" [value]="0">0</mat-option>
-        <mat-option 
-          [disabled]="group.controls.minDesired.value > (i+1)" 
-          *ngFor="let card of (group.controls.names.value || []); let i = index" [value]="i+1">
-          {{i+1}}
+        <mat-option [disabled]="group.controls.minDesired.value > 0" [value]="0">0</mat-option>
+        <mat-option [disabled]="group.controls.minDesired.value > (k+1)"
+          *ngFor="let card of (group.controls.names.value || []); let k = index" [value]="k+1">
+          {{k+1}}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    
-    <button type="button" mat-icon-button
-      matTooltipPosition="right" matTooltip="The maximum number of copies from this card group you want in your hand. This means you want no more than this number in your hand. Note you can also set this to 0 if you don't want any copies of this card group in your hand.">
+
+    <button type="button" mat-icon-button matTooltipPosition="right"
+      matTooltip="The maximum number of copies from this card group you want in your hand. This means you want no more than this number in your hand. Note you can also set this to 0 if you don't want any copies of this card group in your hand.">
       <mat-icon>help</mat-icon>
+    </button>
+
+    <button mat-raised-button mat-primary type="button" mat-icon-button (click)="removeCard(groupIndex)">
+      <mat-icon>remove</mat-icon>
     </button>
 
   </div>
-
-  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="addCard()">
-    <mat-icon>add</mat-icon>
-  </button>
-
-  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="removeCard()">
-    <mat-icon>remove</mat-icon>
-  </button>
   <h2 class="title">
     <span>Searchers</span>
-    <button type="button" mat-icon-button
-      matTooltipPosition="right" matTooltip="Cards that search for 2 or more of the card groups defined above. If it can only search for 1 card group, then include it as part of the card group above instead.">
+    <button type="button" mat-icon-button matTooltipPosition="right"
+      matTooltip="Cards that search for 2 or more of the card groups defined above. If it can only search for 1 card group, then include it as part of the card group above instead.">
       <mat-icon>help</mat-icon>
     </button>
+
+    <button
+      [disabled]="!(cardGroups.length > 0) || !cardGroups[cardGroups.length - 1]?.value.names || searcherGroups.length > 0 && (!searcherGroups[searcherGroups.length -
+      1]?.value.names || !searcherGroups[searcherGroups.length - 1]?.value.associations.length)"
+      mat-raised-button mat-primary type=" button" mat-icon-button (click)="addSearcher()">
+      <mat-icon>add</mat-icon>
+    </button>
   </h2>
-  <div
-    class="form-group"
-    *ngFor="let group of searcherGroups; let i = index"
-    [formGroup]="group"
-  >
+  <div class="form-group" *ngFor="let group of searcherGroups; let searcherIndex = index" [formGroup]="group">
     <mat-form-field class="name_input">
-      <mat-label>{{ "Search Group " + (i + 1) }}</mat-label>
+      <mat-label>{{ "Search Group " + (searcherIndex + 1) }}</mat-label>
       <mat-select disableOptionCentering formControlName="names" multiple>
-        <mat-option
-          *ngFor="let card of cardsWithFormInfo | async; let index = index"
-          [value]="card.name + index"
+        <mat-option *ngFor="let card of cardsWithFormInfo | async; let index = index" [value]="card.name + index"
           [disabled]="
             (card.groupID && 
             card.groupID !== group.controls.id.value) ||
             (card.searchGroupID &&
             card.searchGroupID !== group.controls.id.value)
-          "
-        >
+          ">
           <span class="text-option">{{ card.name }}</span>
-          <img
-            class="image-option"
-            src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
+          <img class="image-option" src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
               card.id
-            }}.jpg"
-        /></mat-option>
+            }}.jpg" /></mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Targets</mat-label>
-      <mat-select
-        disableOptionCentering
-        formControlName="associations"
-        multiple
-      >
-        <mat-option
-          *ngFor="let cardName of cardGroups; let i = index"
-          [disabled]="form.controls.cards.value[i].minDesired <= 0"
-          [value]="i"
-          >Card Group {{ i + 1 }}
+      <mat-select disableOptionCentering formControlName="associations" multiple>
+        <mat-option *ngFor="let cardName of cardGroups; let i = index"
+          [disabled]="form.controls.cards.value[i].minDesired <= 0" [value]="i">Card Group {{ i + 1 }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <button type="button" mat-icon-button
-      matTooltipPosition="above" matTooltip="Must select 2 or more card groups. If your searcher only can search 1 card group, then add the searcher in the card group instead and don't use this section.">
+    <button type="button" mat-icon-button matTooltipPosition="above"
+      matTooltip="Must select 2 or more card groups. If your searcher only can search 1 card group, then add the searcher in the card group instead and don't use this section.">
       <mat-icon>help</mat-icon>
     </button>
+
+    <button mat-raised-button mat-primary type="button" mat-icon-button (click)="removeSearcher(group, searcherIndex)">
+      <mat-icon>remove</mat-icon>
+    </button>
   </div>
-
-  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="addSearcher()">
-    <mat-icon>add</mat-icon>
-  </button>
-
-  <button mat-raised-button mat-primary type="button" mat-icon-button (click)="removeSearcher()">
-    <mat-icon>remove</mat-icon>
-  </button>
 </form>

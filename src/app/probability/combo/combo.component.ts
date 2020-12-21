@@ -115,21 +115,18 @@ export class ComboComponent implements OnChanges {
     );
   }
 
-  public removeCard(): void {
-    this.cards.removeAt(this.cards.length - 1);
+  public removeCard(index): void {
+    this.cards.removeAt(index);
   }
 
-  public changeMax($event) {
-    let arr = this.form.controls.cards.value
-    let temp = []
-    arr.forEach((_temp, _i) => {
-      temp[_i] = {
-        id: _temp.id,
-        names: _temp.names,
-        minDesired: _temp?.names.length >= 1 ? Math.max(1, _temp.minDesired) : _temp.minDesired,
-        maxDesired: Math.max(_temp?.names.length, _temp?.maxDesired)
-      }
-    });
+  public changeMax(index) {
+    let temp = this.form.controls.cards.value.slice()
+    temp[index] = {
+      id: temp[index].id,
+      names: temp[index].names,
+      minDesired: temp[index]?.names.length >= 1 ? Math.max(1, temp[index].minDesired) : temp[index].minDesired,
+      maxDesired: Math.max(temp[index]?.names.length, temp[index]?.maxDesired)
+    }
     this.form.controls.cards.setValue(temp)
   }
 
@@ -151,7 +148,7 @@ export class ComboComponent implements OnChanges {
     );
   }
 
-  public removeSearcher(): void {
-    this.searchers.removeAt(this.searchers.length - 1);
+  public removeSearcher(group, index): void {
+    this.searchers.removeAt(index);
   }
 }

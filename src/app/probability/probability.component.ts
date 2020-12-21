@@ -183,8 +183,14 @@ export class ProbabilityComponent implements AfterViewInit {
     )
       .then((res) => res.json())
       .then(({ data }) => {
-        this.deckData$.next(deck.map((id) => data.find((c) => +c.id === +id)));
+        let _deck = deck.map(function (id) {
+          let _find = data.find((c) => +c.id === +id)
+          let _card = _find ?? data.find(c => c.card_images.map(img => img.id))
+          return _card
+        })
+        return _deck
       })
+      .then(_deck => this.deckData$.next(_deck))
       .finally(() => this.isLoading = false);
   }
 
@@ -375,7 +381,7 @@ export class ProbabilityComponent implements AfterViewInit {
 
       return array;
     }
-    this._currentShuffled = shuffle(this.fullDeckList.main)
+    this._currentShuffled = shuffle(this.fullDeckList.main.slice())
     this._hand = this._currentShuffled.slice(0, this.handSize)
   }
 
