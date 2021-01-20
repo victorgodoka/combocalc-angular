@@ -30,6 +30,7 @@ export class ProbabilityComponent implements AfterViewInit {
   Math: any;
   public readonly deckData$ = new BehaviorSubject<Card[]>([]);
   public readonly autoCompleteCards$ = new BehaviorSubject<Card[]>([]);
+  public comboLength: number = 0;
   public selectedCard: string;
   public omega: string;
   public deckName: string = "";
@@ -96,12 +97,52 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public sumAll($event: any): void {
     this.allProb[$event.index] = $event.value
-    this.fullProbability = Math.min(this.allProb.reduce((b, a) => a + b, 0), 1)
     if ($event.delete) {
       this.allProb.splice($event.index, 1)
-      this.fullProbability = Math.min(this.allProb.reduce((b, a) => a + b, 0), 1)
       this.dynamicForm.removeAt($event.index)
     }
+    let calc = 0;
+    if (this.allProb.length >= 5) {
+      calc =
+        (this.allProb.reduce((a, b) => b + a, 0)) -
+        (
+          (this.allProb[0] * this.allProb[1]) + (this.allProb[0] * this.allProb[2]) + (this.allProb[0] * this.allProb[3]) + (this.allProb[0] * this.allProb[4]) +
+          (this.allProb[1] * this.allProb[2]) + (this.allProb[1] * this.allProb[3]) + (this.allProb[1] * this.allProb[4]) +
+          (this.allProb[2] * this.allProb[3]) + (this.allProb[1] * this.allProb[4]) +
+          (this.allProb[3] * this.allProb[4])
+        ) + (
+          (this.allProb[0] * this.allProb[1] * this.allProb[2]) + (this.allProb[0] * this.allProb[1] * this.allProb[3]) + (this.allProb[0] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[4]) + (this.allProb[0] * this.allProb[2] * this.allProb[4]) + (this.allProb[0] * this.allProb[3] * this.allProb[4]) +
+          (this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[1] * this.allProb[2] * this.allProb[4]) + (this.allProb[1] * this.allProb[3] + this.allProb[4]) +
+          (this.allProb[2] * this.allProb[3] * this.allProb[4])
+        ) - (
+          (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[4]) + (this.allProb[0] * this.allProb[1] * this.allProb[3] * this.allProb[4]) + (this.allProb[0] * this.allProb[2] * this.allProb[3] * this.allProb[4]) +
+          (this.allProb[1] * this.allProb[2] * this.allProb[3] * this.allProb[4])
+        ) + (this.allProb.reduce((a, b) => b * a, 0))
+          console.log(5, calc)
+      } else if (this.allProb.length === 4) {
+      calc =
+        (this.allProb.reduce((a, b) => b + a, 0)) -
+        ((this.allProb[0] * this.allProb[1]) + (this.allProb[0] * this.allProb[2]) + (this.allProb[0] * this.allProb[3]) + (this.allProb[1] * this.allProb[2]) + (this.allProb[1] * this.allProb[3]) + (this.allProb[2] * this.allProb[3])) +
+        ((this.allProb[0] * this.allProb[1] * this.allProb[2]) + (this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[3])) -
+        (this.allProb.reduce((a, b) => b * a, 0))
+        console.log(4, calc)
+      } else if (this.allProb.length === 3) {
+      calc =
+        (this.allProb.reduce((a, b) => b + a, 0)) -
+        ((this.allProb[0] * this.allProb[1]) + this.allProb[0] * this.allProb[2] + this.allProb[1] * this.allProb[2]) +
+        (this.allProb.reduce((a, b) => b * a, 0))
+        console.log(3, calc)
+      } else if (this.allProb.length === 2) {
+      calc =
+        (this.allProb.reduce((a, b) => b + a, 0)) -
+        (this.allProb.reduce((a, b) => b * a, 0))
+        console.log(2, calc)
+      } else {
+      calc =
+        (this.allProb.reduce((a, b) => b + a, 0))
+    }
+
+    this.fullProbability = Math.min(calc, 1)
   }
 
   public ngAfterViewInit(): void {

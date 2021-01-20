@@ -25,7 +25,8 @@
             <input type="text" (input)="searchForCards()" placeholder="Select a card to add into your deck"
               aria-label="Number" matInput [(ngModel)]="selectedCard" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
-              <mat-option (click)="addCard(card.id)" *ngFor="let card of autoCompleteCards$ | async"
+              <mat-option (click)="addCard(card.id)"
+                *ngFor="let card of autoCompleteCards$ | async"
                 [value]="card.name">
                 <span class="text-option">{{ card.name }}</span>
                 <img class="image-option" src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
@@ -96,7 +97,7 @@
             Export DeckImage
           </a>
         </div>
-        <button mat-button (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
+        <button mat-button [disabled]="dynamicForm.controls.length >= 5" (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
         <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
           Link</button>
         <button mat-button (click)="reset()" mat-raised-button mat-primary class="reset">Reset</button>

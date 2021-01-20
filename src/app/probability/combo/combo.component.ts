@@ -69,6 +69,7 @@ export class ComboComponent implements OnChanges {
     startWith(0),
     map(({ searchers, cards }: ComboForm) => {
       try {
+        if (!cards || cards.length === 0 || !cards[0].names) return 0;
         return comboCalc(searchers, cards, this.handSize, this.deckData.length);
       } catch {
         return 0;
