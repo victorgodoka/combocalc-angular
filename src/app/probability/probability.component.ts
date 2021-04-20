@@ -109,14 +109,16 @@ export class ProbabilityComponent implements AfterViewInit {
         (
           (this.allProb[0] * this.allProb[1]) + (this.allProb[0] * this.allProb[2]) + (this.allProb[0] * this.allProb[3]) + (this.allProb[0] * this.allProb[4]) +
           (this.allProb[1] * this.allProb[2]) + (this.allProb[1] * this.allProb[3]) + (this.allProb[1] * this.allProb[4]) +
-          (this.allProb[2] * this.allProb[3]) + (this.allProb[1] * this.allProb[4]) +
+          (this.allProb[2] * this.allProb[3]) + (this.allProb[2] * this.allProb[4]) +
           (this.allProb[3] * this.allProb[4])
         ) + (
-          (this.allProb[0] * this.allProb[1] * this.allProb[2]) + (this.allProb[0] * this.allProb[1] * this.allProb[3]) + (this.allProb[0] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[4]) + (this.allProb[0] * this.allProb[2] * this.allProb[4]) + (this.allProb[0] * this.allProb[3] * this.allProb[4]) +
+          (this.allProb[0] * this.allProb[1] * this.allProb[2]) + (this.allProb[0] * this.allProb[1] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[4]) +
+          (this.allProb[0] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[2] * this.allProb[4]) + (this.allProb[0] * this.allProb[3] * this.allProb[4]) +
           (this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[1] * this.allProb[2] * this.allProb[4]) + (this.allProb[1] * this.allProb[3] + this.allProb[4]) +
           (this.allProb[2] * this.allProb[3] * this.allProb[4])
         ) - (
-          (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[4]) + (this.allProb[0] * this.allProb[1] * this.allProb[3] * this.allProb[4]) + (this.allProb[0] * this.allProb[2] * this.allProb[3] * this.allProb[4]) +
+          (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[4]) + 
+          (this.allProb[0] * this.allProb[1] * this.allProb[3] * this.allProb[4]) + (this.allProb[0] * this.allProb[2] * this.allProb[3] * this.allProb[4]) +
           (this.allProb[1] * this.allProb[2] * this.allProb[3] * this.allProb[4])
         ) + (this.allProb.reduce((a, b) => b * a, 1))
     } else if (this.allProb.length === 4) {
