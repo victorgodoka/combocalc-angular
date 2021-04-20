@@ -192,6 +192,7 @@ mat-form-field~mat-form-field {
 
 .description {
   justify-content: space-between;
+  margin-top: 26px;
 }
 
 .deck-prices {

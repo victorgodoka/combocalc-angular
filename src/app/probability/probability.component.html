@@ -7,10 +7,13 @@
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Decklist 
+            Decklist
           </mat-panel-title>
           <mat-panel-description class="description">
-            <p class="deckname">{{ deckName }}</p>
+            <mat-form-field class="deckName">
+              <mat-label>DeckName</mat-label>
+              <input matInput [placeholder]="deckName" [(ngModel)]="deckName">
+            </mat-form-field>
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="decklist" *ngIf="fullDeckList">
@@ -25,8 +28,7 @@
             <input type="text" (input)="searchForCards()" placeholder="Select a card to add into your deck"
               aria-label="Number" matInput [(ngModel)]="selectedCard" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
-              <mat-option (click)="addCard(card.id)"
-                *ngFor="let card of autoCompleteCards$ | async"
+              <mat-option (click)="addCard(card.id)" *ngFor="let card of autoCompleteCards$ | async"
                 [value]="card.name">
                 <span class="text-option">{{ card.name }}</span>
                 <img class="image-option" src="https://storage.googleapis.com/ygoprodeck.com/pics_artgame/{{
@@ -64,13 +66,15 @@
       <mat-expansion-panel hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Hand Testing  
+            Hand Testing
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="handtesting" *ngIf="fullDeckList">
           <div class="handtesing__header">
-            <button (click)="getHand()" type="button" mat-raised-button mat-primary class="gethand">Get Sample Hand</button>
-            <button [disabled]="_hand.length >= deckData.length" (click)="drawOne()" type="button" mat-raised-button mat-primary class="drawone">Draw +1</button>
+            <button (click)="getHand()" type="button" mat-raised-button mat-primary class="gethand">Get Sample
+              Hand</button>
+            <button [disabled]="_hand.length >= deckData.length" (click)="drawOne()" type="button" mat-raised-button
+              mat-primary class="drawone">Draw +1</button>
           </div>
           <div class="handtesting__hand">
             <img *ngFor="let id of _hand" src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ id }}.jpg" />
@@ -82,14 +86,19 @@
           <button (click)="copyCodes('omega')" type="button" mat-raised-button mat-primary>
             Export to Omega Code
           </button>
-          <button (click)="dyanmicDownloadByHtmlTag('ydk', '.ydk')" type=" button" mat-raised-button mat-primary>
-            Export to .ydk
-          </button>
           <button (click)="copyCodes('ydke')" type="button" mat-raised-button mat-primary>
             Export to .ydke code
           </button>
+          <button (click)="copyCodes('names')" type="button" mat-raised-button mat-primary>
+            Export Decklist to Clipboard
+          </button>
+        </div>
+        <div class="export-area">
+          <button (click)="dyanmicDownloadByHtmlTag('ydk', '.ydk')" type=" button" mat-raised-button mat-primary>
+            Export to .ydk
+          </button>
           <button (click)="dyanmicDownloadByHtmlTag('names', '.txt')" type="button" mat-raised-button mat-primary>
-            Export Decklist
+            Export Decklist (.txt)
           </button>
           <a target="_blank"
             href="https://api.duelistsunite.org/decks/imageify?quality=100&list={{formatExports?.imagefy}}"
@@ -97,7 +106,8 @@
             Export DeckImage
           </a>
         </div>
-        <button mat-button [disabled]="dynamicForm.controls.length >= 5" (click)="addCombo()" mat-raised-button mat-primary>Add Combo</button>
+        <button mat-button [disabled]="dynamicForm.controls.length >= 5" (click)="addCombo()" mat-raised-button
+          mat-primary>Add Combo</button>
         <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
           Link</button>
         <button mat-button (click)="reset()" mat-raised-button mat-primary class="reset">Reset</button>
@@ -121,8 +131,7 @@
             <mat-select [(ngModel)]="handSize" [ngModelOptions]="{standalone: true}">
               <mat-option [value]="0">0</mat-option>
               <mat-option [disabled]="i+1 > deckData?.length"
-                *ngFor="let c of [].constructor(Math.min(deckData?.length, 10)); let i = index"
-                [value]="i+1">
+                *ngFor="let c of [].constructor(Math.min(deckData?.length, 10)); let i = index" [value]="i+1">
                 {{i+1}}
               </mat-option>
             </mat-select>
@@ -134,9 +143,7 @@
           </button>
         </div>
         <app-combo *ngFor="let form of dynamicForm.controls; let i = index" [handSize]="handSize" [indexForm]="i"
-          [deckData]="deckData"
-          (onProbability)="sumAll($event)"
-          [form]="form">
+          [deckData]="deckData" (onProbability)="sumAll($event)" [form]="form">
         </app-combo>
       </form>
     </div>

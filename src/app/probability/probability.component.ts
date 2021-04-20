@@ -33,7 +33,7 @@ export class ProbabilityComponent implements AfterViewInit {
   public comboLength: number = 0;
   public selectedCard: string;
   public omega: string;
-  public deckName: string = "";
+  public deckName: string = "Deck";
   public shareLink: string = "";
   public deckTextList: string = "";
   public fullDeckList: any = "";
@@ -102,6 +102,7 @@ export class ProbabilityComponent implements AfterViewInit {
       this.dynamicForm.removeAt($event.index)
     }
     let calc = 0;
+    console.log(this.allProb)
     if (this.allProb.length >= 5) {
       calc =
         (this.allProb.reduce((a, b) => b + a, 0)) -
@@ -117,27 +118,23 @@ export class ProbabilityComponent implements AfterViewInit {
         ) - (
           (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[2] * this.allProb[4]) + (this.allProb[0] * this.allProb[1] * this.allProb[3] * this.allProb[4]) + (this.allProb[0] * this.allProb[2] * this.allProb[3] * this.allProb[4]) +
           (this.allProb[1] * this.allProb[2] * this.allProb[3] * this.allProb[4])
-        ) + (this.allProb.reduce((a, b) => b * a, 0))
-          console.log(5, calc)
-      } else if (this.allProb.length === 4) {
+        ) + (this.allProb.reduce((a, b) => b * a, 1))
+    } else if (this.allProb.length === 4) {
       calc =
         (this.allProb.reduce((a, b) => b + a, 0)) -
         ((this.allProb[0] * this.allProb[1]) + (this.allProb[0] * this.allProb[2]) + (this.allProb[0] * this.allProb[3]) + (this.allProb[1] * this.allProb[2]) + (this.allProb[1] * this.allProb[3]) + (this.allProb[2] * this.allProb[3])) +
         ((this.allProb[0] * this.allProb[1] * this.allProb[2]) + (this.allProb[1] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[2] * this.allProb[3]) + (this.allProb[0] * this.allProb[1] * this.allProb[3])) -
-        (this.allProb.reduce((a, b) => b * a, 0))
-        console.log(4, calc)
-      } else if (this.allProb.length === 3) {
+        (this.allProb.reduce((a, b) => b * a, 1))
+    } else if (this.allProb.length === 3) {
       calc =
         (this.allProb.reduce((a, b) => b + a, 0)) -
         ((this.allProb[0] * this.allProb[1]) + this.allProb[0] * this.allProb[2] + this.allProb[1] * this.allProb[2]) +
-        (this.allProb.reduce((a, b) => b * a, 0))
-        console.log(3, calc)
-      } else if (this.allProb.length === 2) {
+        (this.allProb.reduce((a, b) => b * a, 1))
+    } else if (this.allProb.length === 2) {
       calc =
         (this.allProb.reduce((a, b) => b + a, 0)) -
-        (this.allProb.reduce((a, b) => b * a, 0))
-        console.log(2, calc)
-      } else {
+        (this.allProb.reduce((a, b) => b * a, 1))
+    } else {
       calc =
         (this.allProb.reduce((a, b) => b + a, 0))
     }
@@ -193,7 +190,7 @@ export class ProbabilityComponent implements AfterViewInit {
 
   public uploadDeck(e): void {
     this.file = e.target.files[0];
-    this.deckName = this.file.name
+    this.deckName = this.file.name.replace(".ydk", "")
     const fileReader = new FileReader();
     fileReader.onload = () => {
       const idDeck = (fileReader.result as string)
@@ -282,11 +279,12 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public dyanmicDownloadByHtmlTag(input: string, format: string) {
+    this.deckName = this.deckName + format;
     const text = this.formatExports[input]
     const element = { dynamicDownload: null as HTMLElement }
     element.dynamicDownload = document.createElement('a');
     element.dynamicDownload.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
-    element.dynamicDownload.setAttribute('download', this.deckName.replace(".ydk", "") + format);
+    element.dynamicDownload.setAttribute('download', this.deckName);
     var event = new MouseEvent("click");
     element.dynamicDownload.dispatchEvent(event);
   }
