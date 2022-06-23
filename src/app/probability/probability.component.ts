@@ -203,7 +203,7 @@ export class ProbabilityComponent implements AfterViewInit {
         );
 
       fetch(
-        `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(fileReader.result as string)}`
+        `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(fileReader.result as string)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
