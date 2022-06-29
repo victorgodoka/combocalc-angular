@@ -235,7 +235,8 @@ input::-webkit-inner-spin-button {
 .footer-icons {
   display: flex;
   align-items: center;
-  justify-content: flex-end
+  justify-content: flex-end;
+  list-style: none;
 }
 
 .footer-icons li {
@@ -243,7 +244,7 @@ input::-webkit-inner-spin-button {
 }
 
 .footer-icons li a img {
-  max-width: 48px;
+  max-width: 32px;
   width: 100%
 }
 

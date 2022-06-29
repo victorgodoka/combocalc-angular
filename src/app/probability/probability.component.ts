@@ -102,7 +102,6 @@ export class ProbabilityComponent implements AfterViewInit {
       this.dynamicForm.removeAt($event.index)
     }
     let calc = 0;
-    console.log(this.allProb)
     if (this.allProb.length >= 5) {
       calc =
         (this.allProb.reduce((a, b) => b + a, 0)) -
@@ -160,7 +159,7 @@ export class ProbabilityComponent implements AfterViewInit {
           this.formatExports = formatExports;
           this.changeDecklist(fullDeckList)
           this.handSize = Math.min(handSize, deckList.length);
-          this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
+          // this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           form.forEach((combo) => this.addCombo(combo));
           this.isLoading = false;
         });
@@ -197,10 +196,11 @@ export class ProbabilityComponent implements AfterViewInit {
     fileReader.onload = () => {
       const idDeck = (fileReader.result as string)
         .split('#extra')[0]
-        .split('\n')
+        .split('\r\n')
         .filter(
           (c) => c.length > 0 && !c.startsWith('#') && !c.startsWith('!')
-        );
+        )
+        .map(n => parseInt(n));
 
       fetch(
         `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(fileReader.result as string)}`
@@ -209,7 +209,7 @@ export class ProbabilityComponent implements AfterViewInit {
         .then(({ data }) => {
           this.formatExports = data.formats;
           this.changeDecklist(JSON.parse(data.formats.json))
-          this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
+          // this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
         });
       this.readDeck(idDeck);
     };
@@ -217,17 +217,13 @@ export class ProbabilityComponent implements AfterViewInit {
   }
 
   public readDeck(deck): void {
-    const uniqueIds = [...new Set(deck)];
     fetch(
-      `https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${uniqueIds.join(',')}`
+      `https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${deck.join(',')}`
     )
       .then((res) => res.json())
       .then(({ data }) => {
-        let _deck = deck.map(function (id) {
-          let _find = data.find((c) => +c.id === +id)
-          let _card = _find ?? data.find(c => c.card_images.map(img => img.id))
-          return _card
-        })
+        let _deck = deck.map(id => data.find((c) => +c.id === +id || c.card_images.map(({ id }) => id).includes(id)))
+        console.log(_deck)
         return _deck
       })
       .then(_deck => this.deckData$.next(_deck))
@@ -239,13 +235,13 @@ export class ProbabilityComponent implements AfterViewInit {
     if (this.omega) {
       this.isLoading = true;
       fetch(
-        `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
+        `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
           this.changeDecklist(JSON.parse(data.formats.json))
           this.formatExports = data.formats;
-          this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
+          // this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
           this.readDeck(JSON.parse(data.formats.json).main);
         })
         .finally(() => this.isLoading = false);
@@ -266,13 +262,13 @@ export class ProbabilityComponent implements AfterViewInit {
       if (decklist) {
         this.isLoading = true;
         fetch(
-          `https://api.duelistsunite.org/decks/convert?pretty&list=${encodeURIComponent(decklist)}`
+          `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(decklist)}`
         )
           .then((res) => res.json())
           .then(({ data }) => {
             this.changeDecklist(JSON.parse(data.formats.json))
             this.formatExports = data.formats;
-            this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
+            // this.formatExports['imagefy'] = encodeURIComponent(this.formatExports.omega)
             this.readDeck(JSON.parse(data.formats.json).main);
           })
           .finally(() => this.isLoading = false);
@@ -376,14 +372,21 @@ export class ProbabilityComponent implements AfterViewInit {
   public async changeDecklist(deck) {
     this.fullDeckList = deck;
     let ids = deck?.main.concat(deck?.extra).concat(deck?.side)
-
     this.isLoading = true
     let names = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${ids.join(",")}`)
       .then(res => res.json())
       .then(({ data }) => data)
       .finally(() => this.isLoading = false);
 
-    let allCards = ids.map(id => names.find(card => card.id === id))
+    let allCards = ids.map(id => names.find(card => card.id === id || card.card_images.map(c => c.id).includes(id)))
+
+    let _fixedDeckList = {
+      ...this.fullDeckList,
+      main: allCards.map(({ id }) => id)
+    }
+
+    this.fullDeckList = _fixedDeckList;
+
     let allPrices = allCards.map(card => card?.card_prices[0] || {
       cardmarket_price: 0,
       tcgplayer_price: 0,
