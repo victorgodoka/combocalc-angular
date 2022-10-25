@@ -203,7 +203,7 @@ export class ProbabilityComponent implements AfterViewInit {
         .map(n => parseInt(n));
 
       fetch(
-        `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(fileReader.result as string)}`
+        `https://web.duelistsunite.org/omega-api-decks/convert?token=fc251ea703476dea9f037898611a14fa3d3e4cde99f6b3b81b4e25&pretty&list=${encodeURIComponent(fileReader.result as string)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
@@ -235,7 +235,7 @@ export class ProbabilityComponent implements AfterViewInit {
     if (this.omega) {
       this.isLoading = true;
       fetch(
-        `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(this.omega)}`
+        `https://web.duelistsunite.org/omega-api-decks/convert?token=fc251ea703476dea9f037898611a14fa3d3e4cde99f6b3b81b4e25&pretty&list=${encodeURIComponent(this.omega)}`
       )
         .then((res) => res.json())
         .then(({ data }) => {
@@ -262,7 +262,7 @@ export class ProbabilityComponent implements AfterViewInit {
       if (decklist) {
         this.isLoading = true;
         fetch(
-          `https://web.duelistsunite.org/omega-api-decks/convert?pretty&list=${encodeURIComponent(decklist)}`
+          `https://web.duelistsunite.org/omega-api-decks/convert?token=fc251ea703476dea9f037898611a14fa3d3e4cde99f6b3b81b4e25&pretty&list=${encodeURIComponent(decklist)}`
         )
           .then((res) => res.json())
           .then(({ data }) => {
