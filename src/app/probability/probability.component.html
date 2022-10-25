@@ -17,13 +17,13 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="decklist" *ngIf="fullDeckList">
-          <ul *ngIf="fullPrice" class="deck-prices">
+          <!-- <ul *ngIf="fullPrice" class="deck-prices">
             <li><b>Card Market</b>: {{ fullPrice?.cardmarket_price | currency: 'EUR' }}</li>
             <li><b>TCG Player</b>: {{ fullPrice?.tcgplayer_price | currency: 'USD' }}</li>
             <li><b>eBay</b>: {{ fullPrice?.ebay_price | currency: 'USD' }}</li>
             <li><b>Amazon</b>: {{ fullPrice?.amazon_price | currency: 'USD' }}</li>
             <li><b>Cool Stuff Inc.</b>: {{ fullPrice?.coolstuffinc_price | currency: 'USD' }}</li>
-          </ul>
+          </ul> -->
           <!-- <mat-form-field class="full-width">
             <input type="text" (input)="searchForCards()" placeholder="Select a card to add into your deck"
               aria-label="Number" matInput [(ngModel)]="selectedCard" [matAutocomplete]="auto">
@@ -42,7 +42,7 @@
             <div class="grid__image" *ngFor="let card of fullDeckList.main; let index = index">
               <!-- <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('main', index, card)">delete
               </mat-icon> -->
-              <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+              <img alt="{{ card.name }}" src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card.id }}.jpg" />
             </div>
           </div>
           <h3 class="full-width">extra</h3>
@@ -50,15 +50,7 @@
             <div class="grid__image" *ngFor="let card of fullDeckList.extra; let index = index">
               <!-- <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('extra', index, card)">delete
               </mat-icon> -->
-              <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
-            </div>
-          </div>
-          <h3 class="full-width">side</h3>
-          <div class="grid full-width">
-            <div class="grid__image" *ngFor="let card of fullDeckList.side; let index = index">
-              <!-- <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('side', index, card)">delete
-              </mat-icon> -->
-              <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
+              <img alt="{{ card.name }}" src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card.id }}.jpg" />
             </div>
           </div>
         </div>
@@ -108,8 +100,8 @@
         </div>
         <button mat-button [disabled]="dynamicForm.controls.length >= 5" (click)="addCombo()" mat-raised-button
           mat-primary>Add Combo</button>
-        <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
-          Link</button>
+        <!-- <button class="share-link" mat-button (click)="copyShareLink()" mat-raised-button mat-primary>Copy & Share
+          Link</button> -->
         <button mat-button (click)="reset()" mat-raised-button mat-primary class="reset">Reset</button>
 
         <h1 *ngIf="fullProbability >= 0" class="form-title">
