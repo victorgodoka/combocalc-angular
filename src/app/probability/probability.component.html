@@ -24,7 +24,7 @@
             <li><b>Amazon</b>: {{ fullPrice?.amazon_price | currency: 'USD' }}</li>
             <li><b>Cool Stuff Inc.</b>: {{ fullPrice?.coolstuffinc_price | currency: 'USD' }}</li>
           </ul>
-          <mat-form-field class="full-width">
+          <!-- <mat-form-field class="full-width">
             <input type="text" (input)="searchForCards()" placeholder="Select a card to add into your deck"
               aria-label="Number" matInput [(ngModel)]="selectedCard" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
@@ -36,28 +36,28 @@
             }}.jpg" />
               </mat-option>
             </mat-autocomplete>
-          </mat-form-field>
+          </mat-form-field> -->
           <h3 class="full-width">main</h3>
           <div class="grid full-width">
             <div class="grid__image" *ngFor="let card of fullDeckList.main; let index = index">
-              <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('main', index, card)">delete
-              </mat-icon>
+              <!-- <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('main', index, card)">delete
+              </mat-icon> -->
               <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
             </div>
           </div>
           <h3 class="full-width">extra</h3>
           <div class="grid full-width">
             <div class="grid__image" *ngFor="let card of fullDeckList.extra; let index = index">
-              <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('extra', index, card)">delete
-              </mat-icon>
+              <!-- <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('extra', index, card)">delete
+              </mat-icon> -->
               <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
             </div>
           </div>
           <h3 class="full-width">side</h3>
           <div class="grid full-width">
             <div class="grid__image" *ngFor="let card of fullDeckList.side; let index = index">
-              <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('side', index, card)">delete
-              </mat-icon>
+              <!-- <mat-icon aria-hidden="false" aria-label="delete icon" (click)="deleteCard('side', index, card)">delete
+              </mat-icon> -->
               <img src="https://storage.googleapis.com/ygoprodeck.com/pics/{{ card }}.jpg" />
             </div>
           </div>
